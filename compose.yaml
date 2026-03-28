@@ -12,16 +12,6 @@ services:
         condition: service_healthy
     env_file: .env.local
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: ../Dockerfile.frontend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    ports:
-      - "5173:5173"
-
   db:
     image: postgres:17
     environment:

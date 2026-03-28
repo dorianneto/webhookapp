@@ -11,15 +11,27 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] **0.1** Initialise Symfony 7 project (`symfony new . --version="7.*" --webapp`)
 - [x] **0.2** Initialise React 18 + Vite frontend inside `frontend/` directory
 - [x] **0.3** Configure Vite `build.outDir` to output to `public/build/` so Symfony can serve the static build
-- [x] **0.4** Write `docker-compose.yml` with four services:
+- [x] **0.4** Write `docker-compose.yml` with three services:
   - `app` — PHP 8.3 + Symfony CLI (`symfony server:start`)
-  - `frontend` — Node 20 + Vite dev server (HMR on port 5173)
   - `db` — PostgreSQL 18
   - `worker` — reuses the `app` image, runs `messenger:consume async --time-limit=3600`
 - [x] **0.5** Write `Dockerfile` for the `app`/`worker` image (PHP 8.3-cli, Composer, Symfony CLI binary)
-- [x] **0.6** Write `Dockerfile` for the `frontend` image (Node 20, installs deps, starts Vite)
 - [x] **0.7** Add `.env` / `.env.local` template with `DATABASE_URL`, `APP_ENV`, `APP_SECRET`
 - [ ] **0.8** Verify `docker compose up` starts all four services with no errors
+
+---
+
+## Phase 0.9 — Frontend-Symfony Integration
+
+- [x] **0.9.1** Create `src/Controller/SpaController.php`:
+  - `#[Route('/{reactRouting}', requirements: ['reactRouting' => '^(?!api|in).*'], priority: -10)]`
+  - Reads and returns `public/build/index.html` as `text/html`
+  - Regex `^(?!api|in).*` explicitly excludes `/api/*` and `/in/*` paths
+  - `priority: -10` ensures all future routes win over this fallback by default
+- [ ] **0.9.2** Run `npm run build` inside `frontend/`, then `docker compose up` and verify
+  `http://localhost:8000/` loads the React app and assets (`/build/assets/*.js`, `/build/assets/*.css`) return 200
+- [ ] **0.9.3** Verify SPA routing: navigate to a nested path (e.g. `/sources/123`) and confirm
+  the React shell still loads (client-side routing handled by React Router)
 
 ---
 
@@ -239,11 +251,9 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 
 ## Phase 10 — Production Readiness
 
-- [ ] **10.1** `npm run build` outputs static assets to `public/build/`; Symfony serves them via `public/index.php` fallback
-- [ ] **10.2** Symfony `webpack_encore` or Vite manifest integration — ensure asset paths resolve correctly in production
-- [ ] **10.3** `APP_ENV=prod` configuration — disable debug, enable OPcache
-- [ ] **10.4** Document `docker compose up` as the single start command in README (optional — only if explicitly requested)
-- [ ] **10.5** Confirm all four Docker services start cleanly and end-to-end flow works:
+- [ ] **10.1** `APP_ENV=prod` configuration — disable debug, enable OPcache
+- [ ] **10.2** Document `docker compose up` as the single start command in README (optional — only if explicitly requested)
+- [ ] **10.3** Confirm all four Docker services start cleanly and end-to-end flow works:
   1. Register → login → create source → copy inbound URL
   2. Add endpoint
   3. `curl -X POST <inbound_url> -d '{"test":1}'`
@@ -255,7 +265,8 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 
 ```
 Phase 0 (scaffolding)
-  └─ Phase 1 (DB entities + migrations)
+  └─ Phase 0.9 (frontend-symfony integration)
+       └─ Phase 1 (DB entities + migrations)
        ├─ Phase 2 (auth)
        ├─ Phase 3 (sources)          ─┐
        └─ Phase 4 (endpoints)         ├─ Phase 5 (ingestion) ─── Phase 6 (delivery worker)
