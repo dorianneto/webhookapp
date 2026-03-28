@@ -8,9 +8,9 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 
 ## Phase 0 — Project Scaffolding
 
-- [ ] **0.1** Initialise Symfony 7 project (`symfony new . --version="7.*" --webapp`)
-- [ ] **0.2** Initialise React 18 + Vite frontend inside `frontend/` directory
-- [ ] **0.3** Configure Vite `build.outDir` to output to `public/build/` so Symfony can serve the static build
+- [x] **0.1** Initialise Symfony 7 project (`symfony new . --version="7.*" --webapp`)
+- [x] **0.2** Initialise React 18 + Vite frontend inside `frontend/` directory
+- [x] **0.3** Configure Vite `build.outDir` to output to `public/build/` so Symfony can serve the static build
 - [ ] **0.4** Write `docker-compose.yml` with four services:
   - `app` — PHP 8.3 + Symfony CLI (`symfony server:start`)
   - `frontend` — Node 20 + Vite dev server (HMR on port 5173)
