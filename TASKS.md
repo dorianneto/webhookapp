@@ -1,6 +1,6 @@
 # WaaS MVP — Implementation Tasks
 
-All tasks follow the architecture and constraints defined in `waas-prd.md` and `CLAUDE.md`.
+All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUDE.md`.
 **Stack:** Symfony 7 / PHP 8.3 · React 18 + Vite · PostgreSQL 18 · Symfony Messenger (Doctrine transport)
 **Architecture:** Hexagonal (Ports & Adapters) · SOLID · PHPUnit unit tests
 
