@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Webhook-as-a-Service (WaaS) MVP — a platform that receives webhooks from third-party services and fans them out to user-defined destination URLs with automatic retries and a delivery dashboard.
 
-**Stack:** Symfony 7 (PHP 8.3+) backend + React 18 + Vite frontend, monolith deployment, PostgreSQL 18, Symfony Messenger with Doctrine transport.
+**Stack:** Symfony 7 (PHP 8.3+) backend + React 18 + Vite frontend, monolith deployment, PostgreSQL 17, Symfony Messenger with Doctrine transport.
 
 ## Development Commands
 

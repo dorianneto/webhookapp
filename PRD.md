@@ -305,7 +305,7 @@ The application MUST be fully Dockerized for the development environment using *
 
 - `app` — PHP 8.3 + Symfony running via the Symfony CLI local server (`symfony server:start`). Requires the [Symfony CLI](https://symfony.com/download) binary to be installed in the container.
 - `frontend` — Node + Vite dev server with hot module replacement
-- `db` — PostgreSQL 18
+- `db` — PostgreSQL 17
 - `worker` — Symfony Messenger consumer (`messenger:consume async`)
 
 ---
@@ -314,7 +314,7 @@ The application MUST be fully Dockerized for the development environment using *
 
 - **PHP 8.3+**, **Symfony 7.x**
 - **React 18+**, bundled with **Vite**
-- **PostgreSQL 18**
+- **PostgreSQL 17**
 - In production, the React app is served as a static build from Symfony's `public/` directory — no separate Node server
 - No external queue broker in MVP (Doctrine transport only)
 - HTTPS required in production (inbound webhook URLs must be reachable)
