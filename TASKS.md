@@ -60,10 +60,10 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] `delivery_attempts(event_id, endpoint_id)` — composite
 
 ### 1.5 Migrations
-- [ ] Run `doctrine:migrations:diff` to generate initial migration
-- [ ] Review generated SQL for correctness (types, constraints, indexes)
-- [ ] Run `doctrine:migrations:migrate` and verify schema in the `db` container
-- [ ] Commit migration file alongside entity definitions
+- [x] Run `doctrine:migrations:diff` to generate initial migration
+- [x] Review generated SQL for correctness (types, constraints, indexes)
+- [x] Run `doctrine:migrations:migrate` and verify schema in the `db` container
+- [x] Commit migration file alongside entity definitions
 
 ---
 
