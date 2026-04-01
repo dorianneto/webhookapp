@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'events')]
+#[ORM\Index(name: 'idx_events_source_received', columns: ['source_id', 'received_at'])]
 class Event
 {
     #[ORM\Id]

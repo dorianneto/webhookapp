@@ -55,9 +55,9 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] Unique constraint on `event_endpoint_deliveries(event_id, endpoint_id)`
 
 ### 1.4 Required indexes (created via migrations)
-- [ ] `events(source_id, received_at DESC)` — composite
-- [ ] `event_endpoint_deliveries(event_id)`
-- [ ] `delivery_attempts(event_id, endpoint_id)` — composite
+- [x] `events(source_id, received_at DESC)` — composite
+- [x] `event_endpoint_deliveries(event_id)`
+- [x] `delivery_attempts(event_id, endpoint_id)` — composite
 
 ### 1.5 Migrations
 - [ ] Run `doctrine:migrations:diff` to generate initial migration

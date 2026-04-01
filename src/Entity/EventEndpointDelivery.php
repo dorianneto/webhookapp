@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'event_endpoint_deliveries')]
 #[ORM\UniqueConstraint(name: 'uq_eed_event_endpoint', columns: ['event_id', 'endpoint_id'])]
+#[ORM\Index(name: 'idx_eed_event_id', columns: ['event_id'])]
 class EventEndpointDelivery
 {
     #[ORM\Id]
