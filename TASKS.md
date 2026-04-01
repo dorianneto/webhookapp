@@ -41,12 +41,12 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] Add `doctrine/orm`, `doctrine/doctrine-bundle`, `doctrine/doctrine-migrations-bundle`, `symfony/uid` via Composer
 
 ### 1.2 Domain entities (no Symfony/Doctrine imports in domain layer)
-- [ ] **1.2.1** `Domain/User` — id, email, password hash, createdAt
-- [ ] **1.2.2** `Domain/Source` — id, userId, name, inboundUuid (UUIDv7), createdAt
-- [ ] **1.2.3** `Domain/Endpoint` — id, sourceId, url, createdAt
-- [ ] **1.2.4** `Domain/Event` — id, sourceId, method, headers (array), body (string), status (enum: pending/delivered/failed), receivedAt
-- [ ] **1.2.5** `Domain/EventEndpointDelivery` — id, eventId, endpointId, status (enum: pending/delivered/failed), createdAt, updatedAt; unique on (eventId, endpointId)
-- [ ] **1.2.6** `Domain/DeliveryAttempt` — id, eventId, endpointId, attemptNumber (1–5), statusCode (nullable), responseBody (≤500 chars, valid UTF-8), durationMs, attemptedAt
+- [x] **1.2.1** `Domain/User` — id, email, password hash, createdAt
+- [x] **1.2.2** `Domain/Source` — id, userId, name, inboundUuid (UUIDv7), createdAt
+- [x] **1.2.3** `Domain/Endpoint` — id, sourceId, url, createdAt
+- [x] **1.2.4** `Domain/Event` — id, sourceId, method, headers (array), body (string), status (enum: pending/delivered/failed), receivedAt
+- [x] **1.2.5** `Domain/EventEndpointDelivery` — id, eventId, endpointId, status (enum: pending/delivered/failed), createdAt, updatedAt; unique on (eventId, endpointId)
+- [x] **1.2.6** `Domain/DeliveryAttempt` — id, eventId, endpointId, attemptNumber (1–5), statusCode (nullable), responseBody (≤500 chars, valid UTF-8), durationMs, attemptedAt
 
 ### 1.3 Doctrine mappings (Infrastructure layer — XML or attribute mappings on separate ORM entities or mapped superclasses)
 - [ ] Map each domain entity to its table with correct column types
