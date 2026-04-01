@@ -49,10 +49,10 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] **1.2.6** `Domain/DeliveryAttempt` — id, eventId, endpointId, attemptNumber (1–5), statusCode (nullable), responseBody (≤500 chars, valid UTF-8), durationMs, attemptedAt
 
 ### 1.3 Doctrine mappings (Infrastructure layer — XML or attribute mappings on separate ORM entities or mapped superclasses)
-- [ ] Map each domain entity to its table with correct column types
-- [ ] `sources.inbound_uuid` → `uuid` column type, unique constraint, generated with UUIDv7
-- [ ] `events.status`, `event_endpoint_deliveries.status` → PostgreSQL `enum` or Doctrine `string` with value validation
-- [ ] Unique constraint on `event_endpoint_deliveries(event_id, endpoint_id)`
+- [x] Map each domain entity to its table with correct column types
+- [x] `sources.inbound_uuid` → `uuid` column type, unique constraint, generated with UUIDv7
+- [x] `events.status`, `event_endpoint_deliveries.status` → PostgreSQL `enum` or Doctrine `string` with value validation
+- [x] Unique constraint on `event_endpoint_deliveries(event_id, endpoint_id)`
 
 ### 1.4 Required indexes (created via migrations)
 - [ ] `events(source_id, received_at DESC)` — composite
