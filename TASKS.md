@@ -17,7 +17,7 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
   - `worker` — reuses the `app` image, runs `messenger:consume async --time-limit=3600`
 - [x] **0.5** Write `Dockerfile` for the `app`/`worker` image (PHP 8.3-cli, Composer, Symfony CLI binary)
 - [x] **0.7** Add `.env` / `.env.local` template with `DATABASE_URL`, `APP_ENV`, `APP_SECRET`
-- [ ] **0.8** Verify `docker compose up` starts all four services with no errors
+- [x] **0.8** Verify `docker compose up` starts all four services with no errors
 
 ---
 
@@ -28,9 +28,9 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
   - Reads and returns `public/build/index.html` as `text/html`
   - Regex `^(?!api|in).*` explicitly excludes `/api/*` and `/in/*` paths
   - `priority: -10` ensures all future routes win over this fallback by default
-- [ ] **0.9.2** Run `npm run build` inside `frontend/`, then `docker compose up` and verify
+- [x] **0.9.2** Run `npm run build` inside `frontend/`, then `docker compose up` and verify
   `http://localhost:8000/` loads the React app and assets (`/build/assets/*.js`, `/build/assets/*.css`) return 200
-- [ ] **0.9.3** Verify SPA routing: navigate to a nested path (e.g. `/sources/123`) and confirm
+- [x] **0.9.3** Verify SPA routing: navigate to a nested path (e.g. `/sources/123`) and confirm
   the React shell still loads (client-side routing handled by React Router)
 
 ---
