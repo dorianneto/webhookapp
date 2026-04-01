@@ -1,3 +1,4 @@
+name: webhookapp
 services:
   app:
     build:
@@ -11,6 +12,10 @@ services:
       db:
         condition: service_healthy
     env_file: .env.local
+    container_name: webhookapp-app
+    restart: always
+    networks:
+        - webhookappdev
 
   db:
     image: postgres:17
@@ -27,6 +32,10 @@ services:
       - database_data:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
+    restart: always
+    container_name: webhookapp-db
+    networks:
+        - webhookappdev
 
   worker:
     build:
@@ -39,6 +48,14 @@ services:
       db:
         condition: service_healthy
     env_file: .env.local
+    restart: always
+    container_name: webhookapp-worker
+    networks:
+        - webhookappdev
 
 volumes:
   database_data:
+
+networks:
+  webhookappdev:
+    name: webhookappdev
