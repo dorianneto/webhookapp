@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "watch": "vite build --watch",
-    "build": "tsc -b && vite build",
+    "watch": "rm -rf ../public/build && vite build --watch",
+    "build": "tsc -b && rm -rf ../public/build && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
