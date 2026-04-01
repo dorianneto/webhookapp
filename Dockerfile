@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.4-cli
 
 RUN apt-get update && apt-get install -y \
     git curl unzip libpq-dev libzip-dev libicu-dev \
@@ -14,7 +14,10 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash \
 
 WORKDIR /app
 COPY . .
-RUN composer install --no-interaction --prefer-dist
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 8000
-CMD ["symfony", "server:start", "--no-tls", "--allow-http"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["symfony", "server:start", "--no-tls", "--allow-http", "--listen-ip=0.0.0.0"]

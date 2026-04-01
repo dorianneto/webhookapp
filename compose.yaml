@@ -14,17 +14,23 @@ services:
     env_file: .env.local
     container_name: webhookapp-app
     restart: always
+    healthcheck:
+      test: ["CMD", "symfony", "server:status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
         - webhookappdev
 
   db:
     image: postgres:17
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-webhookapp}
+      POSTGRES_DB: ${POSTGRES_DB:-portobello}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
       POSTGRES_USER: ${POSTGRES_USER:-app}
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-webhookapp}", "-U", "${POSTGRES_USER:-app}"]
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-portobello}", "-U", "${POSTGRES_USER:-app}"]
       timeout: 5s
       retries: 5
       start_period: 60s
@@ -45,6 +51,8 @@ services:
       - .:/app
     command: php bin/console messenger:consume async --time-limit=3600
     depends_on:
+      app:
+        condition: service_healthy
       db:
         condition: service_healthy
     env_file: .env.local
