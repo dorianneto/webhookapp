@@ -1,7 +1,7 @@
 # WaaS MVP — Implementation Tasks
 
 All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUDE.md`.
-**Stack:** Symfony 7 / PHP 8.3 · React 18 + Vite · PostgreSQL 18 · Symfony Messenger (Doctrine transport)
+**Stack:** Symfony 7 / PHP 8.3 · React 18 + Vite · PostgreSQL 17 · Symfony Messenger (Doctrine transport)
 **Architecture:** Hexagonal (Ports & Adapters) · SOLID · PHPUnit unit tests
 
 ---
@@ -13,7 +13,7 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] **0.3** Configure Vite `build.outDir` to output to `public/build/` so Symfony can serve the static build
 - [x] **0.4** Write `docker-compose.yml` with three services:
   - `app` — PHP 8.3 + Symfony CLI (`symfony server:start`)
-  - `db` — PostgreSQL 18
+  - `db` — PostgreSQL 17
   - `worker` — reuses the `app` image, runs `messenger:consume async --time-limit=3600`
 - [x] **0.5** Write `Dockerfile` for the `app`/`worker` image (PHP 8.3-cli, Composer, Symfony CLI binary)
 - [x] **0.7** Add `.env` / `.env.local` template with `DATABASE_URL`, `APP_ENV`, `APP_SECRET`
@@ -38,7 +38,7 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 ## Phase 1 — Database & Doctrine Entities
 
 ### 1.1 Install dependencies
-- [ ] Add `doctrine/orm`, `doctrine/doctrine-bundle`, `doctrine/doctrine-migrations-bundle`, `symfony/uid` via Composer
+- [x] Add `doctrine/orm`, `doctrine/doctrine-bundle`, `doctrine/doctrine-migrations-bundle`, `symfony/uid` via Composer
 
 ### 1.2 Domain entities (no Symfony/Doctrine imports in domain layer)
 - [ ] **1.2.1** `Domain/User` — id, email, password hash, createdAt
