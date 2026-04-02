@@ -78,9 +78,10 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] Unit tests: `RegistrationUseCaseTest`, `UserRepositoryPortTest` (mock)
 
 ### 2.2 Frontend
-- [ ] **2.2.1** `/register` route — form with email + password + confirm password; POST to `/register`; redirect to `/` on success
-- [ ] **2.2.2** `/login` route — form with email + password; POST to `/login`; redirect to `/` on success
-- [ ] **2.2.3** Global auth state — store logged-in user in React context or top-level `useState`; redirect unauthenticated users to `/login`
+- [x] **2.2.1** `/register` route — form with email + password + confirm password; POST to `/register`; redirect to `/` on success
+- [x] **2.2.2** `/login` route — form with email + password; POST to `/login`; redirect to `/` on success
+- [x] **2.2.3** Global auth state — store logged-in user in React context or top-level `useState`; redirect unauthenticated users to `/login`
+- [x] **2.2.4** Logout — sign-out button in dashboard header showing logged-in email; calls `logout()` from `AuthContext` → clears session + localStorage → redirects to `/login`
 
 ---
 
