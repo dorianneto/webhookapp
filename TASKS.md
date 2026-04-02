@@ -70,12 +70,12 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 ## Phase 2 — Authentication
 
 ### 2.1 Backend
-- [ ] **2.1.1** Install `symfony/security-bundle`, `symfony/password-hasher`
-- [ ] **2.1.2** Configure `security.yaml`: user provider backed by Doctrine, bcrypt/argon2 password hasher, stateless JSON firewall for `/api/*`, form-login or JSON-login for `/login`
-- [ ] **2.1.3** `POST /register` controller — validate email uniqueness, hash password, persist user, return `201`
-- [ ] **2.1.4** `POST /login` controller — Symfony handles credential check; return `200` with session cookie or JSON user info
-- [ ] **2.1.5** `POST /logout` controller — invalidate session, return `200`
-- [ ] Unit tests: `RegistrationUseCaseTest`, `UserRepositoryPortTest` (mock)
+- [x] **2.1.1** Install `symfony/security-bundle`, `symfony/password-hasher`
+- [x] **2.1.2** Configure `security.yaml`: user provider backed by Doctrine, bcrypt/argon2 password hasher, stateless JSON firewall for `/api/*`, form-login or JSON-login for `/login`
+- [x] **2.1.3** `POST /register` controller — validate email uniqueness, hash password, persist user, return `201`
+- [x] **2.1.4** `POST /login` controller — Symfony handles credential check; return `200` with session cookie or JSON user info
+- [x] **2.1.5** `POST /logout` controller — invalidate session, return `200`
+- [x] Unit tests: `RegistrationUseCaseTest`, `UserRepositoryPortTest` (mock)
 
 ### 2.2 Frontend
 - [ ] **2.2.1** `/register` route — form with email + password + confirm password; POST to `/register`; redirect to `/` on success
