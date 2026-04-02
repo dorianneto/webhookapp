@@ -7,13 +7,14 @@ namespace App\Entity;
 use App\Domain\User as DomainUser;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
 #[ORM\UniqueConstraint(name: 'UNIQ_users_email', columns: ['email'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::STRING)]
@@ -65,6 +66,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): ?string
     {
         return $this->passwordHash;
+    }
+
+    public function isEqualTo(UserInterface $user): bool
+    {
+        return $user->getUserIdentifier() === $this->getUserIdentifier();
     }
 
     // --- Session serialization: keep password hash out of the session ---

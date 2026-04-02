@@ -15,7 +15,6 @@ security:
             security: false
 
         main:
-            lazy: true
             provider: app_user_provider
             stateless: false
             json_login:
