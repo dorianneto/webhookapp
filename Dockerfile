@@ -1,4 +1,13 @@
+FROM node:24 AS node
+
 FROM php:8.4-cli
+
+# Copy Node.js and NPM from the node image
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+
+# Symlink npm to make it accessible
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
 
 RUN apt-get update && apt-get install -y \
     git curl unzip libpq-dev libzip-dev libicu-dev \
