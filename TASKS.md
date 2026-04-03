@@ -88,11 +88,11 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 ## Phase 3 — Source Management
 
 ### 3.1 Domain & Application layer
-- [ ] **3.1.1** Port interface `SourceRepositoryPort` — `save(Source)`, `findById(id, userId)`, `findAllByUser(userId)`, `delete(id, userId)`
-- [ ] **3.1.2** Use case `CreateSourceUseCase` — generates UUIDv7 for `inbound_uuid`, persists via port
-- [ ] **3.1.3** Use case `ListSourcesUseCase`
-- [ ] **3.1.4** Use case `DeleteSourceUseCase` — marks source as deleted (or hard-deletes); does not cascade to events or endpoints
-- [ ] Unit tests for all three use cases with mocked `SourceRepositoryPort`
+- [x] **3.1.1** Port interface `SourceRepositoryPort` — `save(Source)`, `findById(id, userId)`, `findAllByUser(userId)`, `delete(id, userId)`
+- [x] **3.1.2** Use case `CreateSourceUseCase` — generates UUIDv7 for `inbound_uuid`, persists via port
+- [x] **3.1.3** Use case `ListSourcesUseCase`
+- [x] **3.1.4** Use case `DeleteSourceUseCase` — marks source as deleted (or hard-deletes); does not cascade to events or endpoints
+- [x] Unit tests for all three use cases with mocked `SourceRepositoryPort`
 
 ### 3.2 Infrastructure
 - [ ] **3.2.1** `DoctrineSourceRepository` implements `SourceRepositoryPort`
