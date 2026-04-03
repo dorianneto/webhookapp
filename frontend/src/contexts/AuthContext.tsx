@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 
 interface User {
@@ -8,6 +8,7 @@ interface User {
 
 interface AuthContextValue {
   user: User | null
+  isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
 }
@@ -19,6 +20,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem('waas_user')
     return stored ? (JSON.parse(stored) as User) : null
   })
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/me')
+      .then((res) => {
+        if (res.ok) return res.json() as Promise<User>
+        throw new Error('unauthenticated')
+      })
+      .then((data) => {
+        setUser(data)
+        localStorage.setItem('waas_user', JSON.stringify(data))
+      })
+      .catch(() => {
+        setUser(null)
+        localStorage.removeItem('waas_user')
+      })
+      .finally(() => setIsLoading(false))
+  }, [])
 
   const login = async (email: string, password: string): Promise<void> => {
     const res = await fetch('/login', {
@@ -44,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
