@@ -13,5 +13,7 @@ api_v1:
     name_prefix: api_v1_
     type: attribute
 
-controllers:
-    resource: routing.controllers
+spa:
+    resource: ../src/Controller/SpaController.php
+    prefix: /
+    type: attribute

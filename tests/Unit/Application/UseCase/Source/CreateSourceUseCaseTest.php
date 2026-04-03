@@ -34,7 +34,10 @@ final class CreateSourceUseCaseTest extends TestCase
                     && $source->getInboundUuid() !== '';
             }));
 
-        $this->useCase->execute('test-id', 'user-id', 'My Source');
+        $result = $this->useCase->execute('test-id', 'user-id', 'My Source');
+
+        $this->assertInstanceOf(Source::class, $result);
+        $this->assertSame('test-id', $result->getId());
     }
 
     #[AllowMockObjectsWithoutExpectations]

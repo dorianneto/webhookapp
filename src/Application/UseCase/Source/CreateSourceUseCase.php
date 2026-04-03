@@ -14,7 +14,7 @@ final class CreateSourceUseCase
         private readonly SourceRepositoryPort $sourceRepository,
     ) {}
 
-    public function execute(string $id, string $userId, string $name): void
+    public function execute(string $id, string $userId, string $name): Source
     {
         $inboundUuid = Uuid::v7()->toRfc4122();
 
@@ -27,5 +27,7 @@ final class CreateSourceUseCase
         );
 
         $this->sourceRepository->save($source);
+
+        return $source;
     }
 }
