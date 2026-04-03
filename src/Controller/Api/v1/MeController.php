@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api/me', name: 'api_me', methods: ['GET'])]
+#[Route('/me', name: 'me', methods: ['GET'])]
 final class MeController
 {
     public function __construct(private readonly Security $security) {}

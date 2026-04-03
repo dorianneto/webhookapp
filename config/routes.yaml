@@ -7,5 +7,11 @@
 # To list all registered routes, run the following command:
 #   bin/console debug:router
 
+api_v1:
+    resource: ../src/Controller/Api/v1
+    prefix: /api/v1
+    name_prefix: api_v1_
+    type: attribute
+
 controllers:
     resource: routing.controllers

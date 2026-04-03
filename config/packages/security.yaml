@@ -28,7 +28,7 @@ security:
                 invalidate_session: true
 
     access_control:
-        - { path: ^/register$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/register$, roles: PUBLIC_ACCESS }
         - { path: ^/login$,    roles: PUBLIC_ACCESS }
         - { path: ^/in/,       roles: PUBLIC_ACCESS }
         - { path: ^/api/,      roles: ROLE_USER }

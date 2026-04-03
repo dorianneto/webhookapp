@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/me')
+    fetch('/api/v1/me')
       .then((res) => {
         if (res.ok) return res.json() as Promise<User>
         throw new Error('unauthenticated')
