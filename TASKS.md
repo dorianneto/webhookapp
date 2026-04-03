@@ -95,10 +95,10 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] Unit tests for all three use cases with mocked `SourceRepositoryPort`
 
 ### 3.2 Infrastructure
-- [ ] **3.2.1** `DoctrineSourceRepository` implements `SourceRepositoryPort`
-- [ ] **3.2.2** `GET /api/v1/sources` controller → `ListSourcesUseCase` → JSON array
-- [ ] **3.2.3** `POST /api/v1/sources` controller → `CreateSourceUseCase` → `201` with source JSON (including full inbound URL)
-- [ ] **3.2.4** `DELETE /api/v1/sources/{id}` controller → `DeleteSourceUseCase` → `204`
+- [x] **3.2.1** `DoctrineSourceRepository` implements `SourceRepositoryPort`
+- [x] **3.2.2** `GET /api/v1/sources` controller → `ListSourcesUseCase` → JSON array
+- [x] **3.2.3** `POST /api/v1/sources` controller → `CreateSourceUseCase` → `201` with source JSON (including full inbound URL)
+- [x] **3.2.4** `DELETE /api/v1/sources/{id}` controller → `DeleteSourceUseCase` → `204`
 
 ### 3.3 Frontend
 - [ ] **3.3.1** `/` route — fetch and display sources list; show inbound URL, name, created date; link to `/sources/{id}`; button → `/sources/new`
