@@ -5,6 +5,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
 import NewSourcePage from './pages/NewSourcePage'
+import SourceDetailPage from './pages/SourceDetailPage'
+import NewEndpointPage from './pages/NewEndpointPage'
 
 function App() {
   return (
@@ -26,6 +28,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <NewSourcePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sources/:sourceId/endpoints/new"
+            element={
+              <ProtectedRoute>
+                <NewEndpointPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sources/:sourceId"
+            element={
+              <ProtectedRoute>
+                <SourceDetailPage />
               </ProtectedRoute>
             }
           />

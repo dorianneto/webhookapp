@@ -110,21 +110,21 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 ## Phase 4 — Endpoint Management
 
 ### 4.1 Domain & Application layer
-- [ ] **4.1.1** Port interface `EndpointRepositoryPort` — `save(Endpoint)`, `findById(id)`, `findAllBySource(sourceId)`, `delete(id)`, `findActiveBySource(sourceId)`
-- [ ] **4.1.2** Use case `AddEndpointUseCase` — validates URL format, persists endpoint
-- [ ] **4.1.3** Use case `ListEndpointsUseCase`
-- [ ] **4.1.4** Use case `DeleteEndpointUseCase`
-- [ ] Unit tests for all three use cases
+- [x] **4.1.1** Port interface `EndpointRepositoryPort` — `save(Endpoint)`, `findById(id)`, `findAllBySource(sourceId)`, `delete(id)`, `findActiveBySource(sourceId)`
+- [x] **4.1.2** Use case `AddEndpointUseCase` — validates URL format, persists endpoint
+- [x] **4.1.3** Use case `ListEndpointsUseCase`
+- [x] **4.1.4** Use case `DeleteEndpointUseCase`
+- [x] Unit tests for all three use cases
 
 ### 4.2 Infrastructure
-- [ ] **4.2.1** `DoctrineEndpointRepository` implements `EndpointRepositoryPort`
-- [ ] **4.2.2** `GET /api/v1/sources/{id}/endpoints` controller → `ListEndpointsUseCase`
-- [ ] **4.2.3** `POST /api/v1/sources/{id}/endpoints` controller → `AddEndpointUseCase` → `201`
-- [ ] **4.2.4** `DELETE /api/v1/endpoints/{id}` controller → `DeleteEndpointUseCase` → `204`
+- [x] **4.2.1** `DoctrineEndpointRepository` implements `EndpointRepositoryPort`
+- [x] **4.2.2** `GET /api/v1/sources/{id}/endpoints` controller → `ListEndpointsUseCase`
+- [x] **4.2.3** `POST /api/v1/sources/{id}/endpoints` controller → `AddEndpointUseCase` → `201`
+- [x] **4.2.4** `DELETE /api/v1/endpoints/{id}` controller → `DeleteEndpointUseCase` → `204`
 
 ### 4.3 Frontend
-- [ ] **4.3.1** `/sources/{id}` route — show endpoint list alongside event list; each endpoint shows URL and created date; delete button per endpoint
-- [ ] **4.3.2** `/sources/{id}/endpoints/new` route — form with URL field; POST to `/api/v1/sources/{id}/endpoints`; redirect back to `/sources/{id}` on success
+- [x] **4.3.1** `/sources/{id}` route — show endpoint list alongside event list; each endpoint shows URL and created date; delete button per endpoint
+- [x] **4.3.2** `/sources/{id}/endpoints/new` route — form with URL field; POST to `/api/v1/sources/{id}/endpoints`; redirect back to `/sources/{id}` on success
 
 ---
 
