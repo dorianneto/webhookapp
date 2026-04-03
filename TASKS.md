@@ -96,13 +96,13 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 
 ### 3.2 Infrastructure
 - [ ] **3.2.1** `DoctrineSourceRepository` implements `SourceRepositoryPort`
-- [ ] **3.2.2** `GET /api/sources` controller → `ListSourcesUseCase` → JSON array
-- [ ] **3.2.3** `POST /api/sources` controller → `CreateSourceUseCase` → `201` with source JSON (including full inbound URL)
-- [ ] **3.2.4** `DELETE /api/sources/{id}` controller → `DeleteSourceUseCase` → `204`
+- [ ] **3.2.2** `GET /api/v1/sources` controller → `ListSourcesUseCase` → JSON array
+- [ ] **3.2.3** `POST /api/v1/sources` controller → `CreateSourceUseCase` → `201` with source JSON (including full inbound URL)
+- [ ] **3.2.4** `DELETE /api/v1/sources/{id}` controller → `DeleteSourceUseCase` → `204`
 
 ### 3.3 Frontend
 - [ ] **3.3.1** `/` route — fetch and display sources list; show inbound URL, name, created date; link to `/sources/{id}`; button → `/sources/new`
-- [ ] **3.3.2** `/sources/new` route — form with name field; POST to `/api/sources`; redirect to `/sources/{id}` on success
+- [ ] **3.3.2** `/sources/new` route — form with name field; POST to `/api/v1/sources`; redirect to `/sources/{id}` on success
 - [ ] Delete source button on list with confirmation prompt
 
 ---
@@ -118,13 +118,13 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 
 ### 4.2 Infrastructure
 - [ ] **4.2.1** `DoctrineEndpointRepository` implements `EndpointRepositoryPort`
-- [ ] **4.2.2** `GET /api/sources/{id}/endpoints` controller → `ListEndpointsUseCase`
-- [ ] **4.2.3** `POST /api/sources/{id}/endpoints` controller → `AddEndpointUseCase` → `201`
-- [ ] **4.2.4** `DELETE /api/endpoints/{id}` controller → `DeleteEndpointUseCase` → `204`
+- [ ] **4.2.2** `GET /api/v1/sources/{id}/endpoints` controller → `ListEndpointsUseCase`
+- [ ] **4.2.3** `POST /api/v1/sources/{id}/endpoints` controller → `AddEndpointUseCase` → `201`
+- [ ] **4.2.4** `DELETE /api/v1/endpoints/{id}` controller → `DeleteEndpointUseCase` → `204`
 
 ### 4.3 Frontend
 - [ ] **4.3.1** `/sources/{id}` route — show endpoint list alongside event list; each endpoint shows URL and created date; delete button per endpoint
-- [ ] **4.3.2** `/sources/{id}/endpoints/new` route — form with URL field; POST to `/api/sources/{id}/endpoints`; redirect back to `/sources/{id}` on success
+- [ ] **4.3.2** `/sources/{id}/endpoints/new` route — form with URL field; POST to `/api/v1/sources/{id}/endpoints`; redirect back to `/sources/{id}` on success
 
 ---
 
@@ -191,8 +191,8 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [ ] **7.1.2** Use case `GetEventDetailUseCase` — returns raw headers + body + per-endpoint delivery status + all `DeliveryAttempt` rows for the event
 
 ### 7.2 Infrastructure
-- [ ] **7.2.1** `GET /api/sources/{id}/events` controller → `ListEventsUseCase` → JSON array (100 items max)
-- [ ] **7.2.2** `GET /api/events/{id}` controller → `GetEventDetailUseCase` → JSON with nested structure:
+- [ ] **7.2.1** `GET /api/v1/sources/{id}/events` controller → `ListEventsUseCase` → JSON array (100 items max)
+- [ ] **7.2.2** `GET /api/v1/events/{id}` controller → `GetEventDetailUseCase` → JSON with nested structure:
   ```json
   {
     "id": 1,
