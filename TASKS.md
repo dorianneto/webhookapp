@@ -101,9 +101,9 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] **3.2.4** `DELETE /api/v1/sources/{id}` controller → `DeleteSourceUseCase` → `204`
 
 ### 3.3 Frontend
-- [ ] **3.3.1** `/` route — fetch and display sources list; show inbound URL, name, created date; link to `/sources/{id}`; button → `/sources/new`
-- [ ] **3.3.2** `/sources/new` route — form with name field; POST to `/api/v1/sources`; redirect to `/sources/{id}` on success
-- [ ] Delete source button on list with confirmation prompt
+- [x] **3.3.1** `/` route — fetch and display sources list; show inbound URL, name, created date; link to `/sources/{id}`; button → `/sources/new`
+- [x] **3.3.2** `/sources/new` route — form with name field; POST to `/api/v1/sources`; redirect to `/sources/{id}` on success
+- [x] Delete source button on list with confirmation prompt
 
 ---
 

@@ -8,6 +8,7 @@ use App\Application\UseCase\Source\ListSourcesUseCase;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -19,7 +20,7 @@ final class ListSourcesController
         private readonly Security $security,
     ) {}
 
-    public function __invoke(): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         $user = $this->security->getUser();
 
@@ -28,12 +29,14 @@ final class ListSourcesController
         }
 
         $sources = $this->listSourcesUseCase->execute($user->getId());
+        $baseUrl = $request->getSchemeAndHttpHost();
 
         return new JsonResponse(array_map(
             static fn($source) => [
                 'id'          => $source->getId(),
                 'name'        => $source->getName(),
                 'inboundUuid' => $source->getInboundUuid(),
+                'inboundUrl'  => $baseUrl . '/in/' . $source->getInboundUuid(),
                 'createdAt'   => $source->getCreatedAt()->format(\DateTimeInterface::ATOM),
             ],
             $sources

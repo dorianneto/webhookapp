@@ -1,28 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-
-function Dashboard() {
-  const { user, logout } = useAuth()
-
-  const handleLogout = async () => {
-    await logout()
-  }
-
-  return (
-    <div style={{ padding: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Dashboard</h1>
-        <div>
-          <span style={{ marginRight: 16 }}>{user?.email}</span>
-          <button onClick={handleLogout}>Sign out</button>
-        </div>
-      </div>
-    </div>
-  )
-}
+import DashboardPage from './pages/DashboardPage'
+import NewSourcePage from './pages/NewSourcePage'
 
 function App() {
   return (
@@ -35,7 +17,15 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sources/new"
+            element={
+              <ProtectedRoute>
+                <NewSourcePage />
               </ProtectedRoute>
             }
           />
