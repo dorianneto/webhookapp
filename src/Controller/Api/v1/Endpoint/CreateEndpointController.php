@@ -30,7 +30,7 @@ final class CreateEndpointController
         $user = $this->security->getUser();
 
         if (!$user instanceof User) {
-            return new JsonResponse(null, Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['error' => 'Unauthorized.'], Response::HTTP_UNAUTHORIZED);
         }
 
         $data = json_decode($request->getContent(), true);

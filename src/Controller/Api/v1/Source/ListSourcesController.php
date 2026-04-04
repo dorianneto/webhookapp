@@ -25,7 +25,7 @@ final class ListSourcesController
         $user = $this->security->getUser();
 
         if (!$user instanceof User) {
-            return new JsonResponse(null, Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['error' => 'Unauthorized.'], Response::HTTP_UNAUTHORIZED);
         }
 
         $sources = $this->listSourcesUseCase->execute($user->getId());
