@@ -13,6 +13,11 @@ api_v1:
     name_prefix: api_v1_
     type: attribute
 
+ingest:
+    resource: ../src/Controller/IngestEventController.php
+    prefix: /
+    type: attribute
+
 spa:
     resource: ../src/Controller/SpaController.php
     prefix: /

@@ -143,10 +143,10 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] Unit tests: source not found, no endpoints (still 200), multiple endpoints enqueued
 
 ### 5.2 Infrastructure
-- [ ] **5.2.1** `DoctrineEventRepository` implements `EventRepositoryPort`
-- [ ] **5.2.2** `MessengerDeliveryQueue` implements `DeliveryQueuePort` (wraps `MessageBusInterface`)
-- [ ] **5.2.3** `DeliverEventMessage` DTO — carries `eventId`, `endpointId`, `attemptNumber`
-- [ ] **5.2.4** `POST /in/{uuid}` controller (public, no auth):
+- [x] **5.2.1** `DoctrineEventRepository` implements `EventRepositoryPort`
+- [x] **5.2.2** `MessengerDeliveryQueue` implements `DeliveryQueuePort` (wraps `MessageBusInterface`)
+- [x] **5.2.3** `DeliverEventMessage` DTO — carries `eventId`, `endpointId`, `attemptNumber`
+- [x] **5.2.4** `POST /in/{uuid}` controller (public, no auth):
   - Capture raw body (`Request::getContent()`), all headers, HTTP method
   - Call `IngestEventUseCase`
   - On `SourceNotFoundException` → `404`

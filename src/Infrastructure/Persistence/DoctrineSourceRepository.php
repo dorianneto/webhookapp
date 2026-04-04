@@ -42,6 +42,15 @@ final class DoctrineSourceRepository implements SourceRepositoryPort
         return array_map(static fn(SourceEntity $e) => $e->toDomain(), $entities);
     }
 
+    public function findByInboundUuid(string $inboundUuid): ?DomainSource
+    {
+        $entity = $this->entityManager
+            ->getRepository(SourceEntity::class)
+            ->findOneBy(['inboundUuid' => $inboundUuid]);
+
+        return $entity?->toDomain();
+    }
+
     public function delete(string $id, string $userId): void
     {
         $entity = $this->entityManager

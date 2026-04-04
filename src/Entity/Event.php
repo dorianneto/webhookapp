@@ -68,6 +68,11 @@ class Event
         );
     }
 
+    public function setStatus(EventStatus $status): void
+    {
+        $this->status = $status;
+    }
+
     public function toDomain(): DomainEvent
     {
         return new DomainEvent(
