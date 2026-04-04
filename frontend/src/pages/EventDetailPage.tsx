@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { apiFetch } from '../lib/apiFetch'
 
 interface DeliveryAttempt {
   attemptNumber: number
@@ -40,7 +41,7 @@ export default function EventDetailPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch(`/api/v1/events/${eventId}`)
+    apiFetch(`/api/v1/events/${eventId}`)
       .then((res) => {
         if (!res.ok) throw new Error('Event not found.')
         return res.json() as Promise<EventDetail>

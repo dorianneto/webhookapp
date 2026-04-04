@@ -224,7 +224,7 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 
 ## Phase 8 — Cross-cutting Concerns
 
-- [ ] **8.1** Authentication guard — all `/api/*` routes return `401` for unauthenticated requests; frontend redirects to `/login` on `401`
+- [x] **8.1** Authentication guard — all `/api/*` routes return `401` for unauthenticated requests; frontend redirects to `/login` on `401`
 - [ ] **8.2** Authorization — users can only access their own sources/events/endpoints (check `source.user_id` in every use case / query)
 - [ ] **8.3** Input validation — reject empty source names, invalid endpoint URLs (use Symfony Validator or domain-layer assertions); return `422` with error details
 - [ ] **8.4** CORS — configure Symfony to allow requests from the Vite dev server origin in development

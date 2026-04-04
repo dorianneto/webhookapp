@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { apiFetch } from '../lib/apiFetch'
 
 export default function NewEndpointPage() {
   const { sourceId } = useParams<{ sourceId: string }>()
@@ -15,7 +16,7 @@ export default function NewEndpointPage() {
     setLoading(true)
 
     try {
-      const res = await fetch(`/api/v1/sources/${sourceId}/endpoints`, {
+      const res = await apiFetch(`/api/v1/sources/${sourceId}/endpoints`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),

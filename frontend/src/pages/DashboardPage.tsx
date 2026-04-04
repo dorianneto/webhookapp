@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { apiFetch } from '../lib/apiFetch'
 
 interface Source {
   id: string
@@ -19,7 +20,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/api/v1/sources')
+    apiFetch('/api/v1/sources')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load sources.')
         return res.json() as Promise<Source[]>
@@ -32,7 +33,7 @@ export default function DashboardPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Delete this source?')) return
 
-    const res = await fetch(`/api/v1/sources/${id}`, { method: 'DELETE' })
+    const res = await apiFetch(`/api/v1/sources/${id}`, { method: 'DELETE' })
     if (res.ok) {
       setSources((prev) => prev.filter((s) => s.id !== id))
     } else {

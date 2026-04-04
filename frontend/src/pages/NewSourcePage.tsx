@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { apiFetch } from '../lib/apiFetch'
 
 interface CreateSourceResponse {
   id: string
@@ -24,7 +25,7 @@ export default function NewSourcePage() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/v1/sources', {
+      const res = await apiFetch('/api/v1/sources', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),

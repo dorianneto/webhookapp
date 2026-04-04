@@ -39,6 +39,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setIsLoading(false))
   }, [])
 
+  useEffect(() => {
+    const handler = () => {
+      setUser(null)
+      localStorage.removeItem('waas_user')
+    }
+    window.addEventListener('auth:unauthorized', handler)
+    return () => window.removeEventListener('auth:unauthorized', handler)
+  }, [])
+
   const login = async (email: string, password: string): Promise<void> => {
     const res = await fetch('/login', {
       method: 'POST',

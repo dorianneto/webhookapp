@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { apiFetch } from '../lib/apiFetch'
 
 interface Source {
   id: string
@@ -42,15 +43,15 @@ export default function SourceDetailPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/v1/sources').then((res) => {
+      apiFetch('/api/v1/sources').then((res) => {
         if (!res.ok) throw new Error('Failed to load source.')
         return res.json() as Promise<Source[]>
       }),
-      fetch(`/api/v1/sources/${sourceId}/endpoints`).then((res) => {
+      apiFetch(`/api/v1/sources/${sourceId}/endpoints`).then((res) => {
         if (!res.ok) throw new Error('Failed to load endpoints.')
         return res.json() as Promise<Endpoint[]>
       }),
-      fetch(`/api/v1/sources/${sourceId}/events`).then((res) => {
+      apiFetch(`/api/v1/sources/${sourceId}/events`).then((res) => {
         if (!res.ok) throw new Error('Failed to load events.')
         return res.json() as Promise<Event[]>
       }),
@@ -67,7 +68,7 @@ export default function SourceDetailPage() {
 
   const refreshEvents = useCallback(() => {
     setEventsLoading(true)
-    fetch(`/api/v1/sources/${sourceId}/events`)
+    apiFetch(`/api/v1/sources/${sourceId}/events`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load events.')
         return res.json() as Promise<Event[]>
@@ -80,7 +81,7 @@ export default function SourceDetailPage() {
   const handleDeleteEndpoint = async (id: string) => {
     if (!window.confirm('Delete this endpoint?')) return
 
-    const res = await fetch(`/api/v1/endpoints/${id}`, { method: 'DELETE' })
+    const res = await apiFetch(`/api/v1/endpoints/${id}`, { method: 'DELETE' })
     if (res.ok) {
       setEndpoints((prev) => prev.filter((e) => e.id !== id))
     } else {
