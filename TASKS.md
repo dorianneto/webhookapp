@@ -187,12 +187,12 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 ## Phase 7 — Dashboard (Events & Delivery Attempts)
 
 ### 7.1 Domain & Application layer
-- [ ] **7.1.1** Use case `ListEventsUseCase` — last 100 events for a source ordered by `received_at DESC`; returns id, receivedAt, method, status
-- [ ] **7.1.2** Use case `GetEventDetailUseCase` — returns raw headers + body + per-endpoint delivery status + all `DeliveryAttempt` rows for the event
+- [x] **7.1.1** Use case `ListEventsUseCase` — last 100 events for a source ordered by `received_at DESC`; returns id, receivedAt, method, status
+- [x] **7.1.2** Use case `GetEventDetailUseCase` — returns raw headers + body + per-endpoint delivery status + all `DeliveryAttempt` rows for the event
 
 ### 7.2 Infrastructure
-- [ ] **7.2.1** `GET /api/v1/sources/{id}/events` controller → `ListEventsUseCase` → JSON array (100 items max)
-- [ ] **7.2.2** `GET /api/v1/events/{id}` controller → `GetEventDetailUseCase` → JSON with nested structure:
+- [x] **7.2.1** `GET /api/v1/sources/{id}/events` controller → `ListEventsUseCase` → JSON array (100 items max)
+- [x] **7.2.2** `GET /api/v1/events/{id}` controller → `GetEventDetailUseCase` → JSON with nested structure:
   ```json
   {
     "id": 1,
@@ -215,8 +215,8 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
   ```
 
 ### 7.3 Frontend
-- [ ] **7.3.1** `/sources/{id}` route — event list section below endpoint list; show received timestamp, method, status badge (`pending`/`delivered`/`failed`); click → `/sources/{id}/events/{eventId}`; poll or manual refresh
-- [ ] **7.3.2** `/sources/{id}/events/{eventId}` route — event detail page:
+- [x] **7.3.1** `/sources/{id}` route — event list section below endpoint list; show received timestamp, method, status badge (`pending`/`delivered`/`failed`); click → `/sources/{id}/events/{eventId}`; poll or manual refresh
+- [x] **7.3.2** `/sources/{id}/events/{eventId}` route — event detail page:
   - Raw headers and body panel
   - Per-endpoint accordion/table: endpoint URL, overall status, attempt rows (timestamp, HTTP status, response body, duration)
 

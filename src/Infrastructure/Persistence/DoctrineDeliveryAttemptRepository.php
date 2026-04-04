@@ -30,4 +30,14 @@ final class DoctrineDeliveryAttemptRepository implements DeliveryAttemptReposito
                 ->findBy(['eventId' => $eventId, 'endpointId' => $endpointId])
         );
     }
+
+    /** @return DomainDeliveryAttempt[] */
+    public function findAllByEventAndEndpoint(string $eventId, string $endpointId): array
+    {
+        $entities = $this->entityManager
+            ->getRepository(DeliveryAttemptEntity::class)
+            ->findBy(['eventId' => $eventId, 'endpointId' => $endpointId], ['attemptNumber' => 'ASC']);
+
+        return array_map(static fn(DeliveryAttemptEntity $e) => $e->toDomain(), $entities);
+    }
 }

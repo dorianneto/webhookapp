@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage'
 import NewSourcePage from './pages/NewSourcePage'
 import SourceDetailPage from './pages/SourceDetailPage'
 import NewEndpointPage from './pages/NewEndpointPage'
+import EventDetailPage from './pages/EventDetailPage'
 
 function App() {
   return (
@@ -36,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <NewEndpointPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sources/:sourceId/events/:eventId"
+            element={
+              <ProtectedRoute>
+                <EventDetailPage />
               </ProtectedRoute>
             }
           />

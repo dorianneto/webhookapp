@@ -11,4 +11,7 @@ interface DeliveryAttemptRepositoryPort
     public function save(DeliveryAttempt $attempt): void;
 
     public function countByEventAndEndpoint(string $eventId, string $endpointId): int;
+
+    /** @return DeliveryAttempt[] */
+    public function findAllByEventAndEndpoint(string $eventId, string $endpointId): array;
 }
