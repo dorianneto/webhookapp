@@ -8,5 +8,5 @@ use App\Application\Message\DeliverEventMessage;
 
 interface DeliveryQueuePort
 {
-    public function enqueue(DeliverEventMessage $message): void;
+    public function enqueue(DeliverEventMessage $message, int $delayMs = 0): void;
 }

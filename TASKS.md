@@ -157,11 +157,11 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 ## Phase 6 — Event Delivery Worker
 
 ### 6.1 Domain & Application layer
-- [ ] **6.1.1** Port interface `HttpDeliveryPort` — `deliver(url, headers, body, timeoutSeconds): DeliveryResult`
-- [ ] **6.1.2** `DeliveryResult` value object — statusCode (nullable), responseBody (truncated, valid UTF-8), durationMs, success (bool)
-- [ ] **6.1.3** Port interface `DeliveryAttemptRepositoryPort` — `save(DeliveryAttempt)`, `countByEventAndEndpoint(eventId, endpointId)`
-- [ ] **6.1.4** Port interface `EventEndpointDeliveryRepositoryPort` — `findOrCreate(eventId, endpointId)`, `updateStatus(id, status)`, `findAllByEvent(eventId)`
-- [ ] **6.1.5** Use case `ProcessDeliveryUseCase`:
+- [x] **6.1.1** Port interface `HttpDeliveryPort` — `deliver(url, headers, body, timeoutSeconds): DeliveryResult`
+- [x] **6.1.2** `DeliveryResult` value object — statusCode (nullable), responseBody (truncated, valid UTF-8), durationMs, success (bool)
+- [x] **6.1.3** Port interface `DeliveryAttemptRepositoryPort` — `save(DeliveryAttempt)`, `countByEventAndEndpoint(eventId, endpointId)`
+- [x] **6.1.4** Port interface `EventEndpointDeliveryRepositoryPort` — `findOrCreate(eventId, endpointId)`, `updateStatus(id, status)`, `findAllByEvent(eventId)`
+- [x] **6.1.5** Use case `ProcessDeliveryUseCase`:
   1. Load `EventEndpointDelivery` and `Event` (get raw body + headers)
   2. POST via `HttpDeliveryPort` with 10-second timeout; add `X-Webhook-Event-Id: <events.id>` header
   3. Record `DeliveryAttempt` row
@@ -171,7 +171,7 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
      - Recompute and update `events.status` using the deterministic rule
   5. If failed and `attemptNumber < 5`: re-enqueue with delay (30s → 5m → 30m → 2h)
   6. If failed and `attemptNumber == 5`: mark delivery as `failed`, recompute event status
-- [ ] Unit tests: success on first attempt, retry scheduling, exhausted retries, event status recomputation (concurrent delivery scenarios covered via mocks)
+- [x] Unit tests: success on first attempt, retry scheduling, exhausted retries, event status recomputation (concurrent delivery scenarios covered via mocks)
 
 ### 6.2 Infrastructure
 - [ ] **6.2.1** `GuzzleHttpDeliveryAdapter` (or `SymfonyHttpClientAdapter`) implements `HttpDeliveryPort`

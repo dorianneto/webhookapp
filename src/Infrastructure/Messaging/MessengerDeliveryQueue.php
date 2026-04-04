@@ -7,6 +7,7 @@ namespace App\Infrastructure\Messaging;
 use App\Application\Message\DeliverEventMessage;
 use App\Application\Port\DeliveryQueuePort;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 final class MessengerDeliveryQueue implements DeliveryQueuePort
 {
@@ -14,8 +15,9 @@ final class MessengerDeliveryQueue implements DeliveryQueuePort
         private readonly MessageBusInterface $bus,
     ) {}
 
-    public function enqueue(DeliverEventMessage $message): void
+    public function enqueue(DeliverEventMessage $message, int $delayMs = 0): void
     {
-        $this->bus->dispatch($message);
+        $stamps = $delayMs > 0 ? [new DelayStamp($delayMs)] : [];
+        $this->bus->dispatch($message, $stamps);
     }
 }
