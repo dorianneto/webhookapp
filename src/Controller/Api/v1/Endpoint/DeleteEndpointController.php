@@ -6,6 +6,7 @@ namespace App\Controller\Api\v1\Endpoint;
 
 use App\Application\UseCase\Endpoint\DeleteEndpointUseCase;
 use App\Domain\Exception\EndpointNotFoundException;
+use App\Domain\Exception\SourceNotFoundException;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,8 +30,8 @@ final class DeleteEndpointController
         }
 
         try {
-            $this->deleteEndpointUseCase->execute($id);
-        } catch (EndpointNotFoundException) {
+            $this->deleteEndpointUseCase->execute($id, $user->getId());
+        } catch (EndpointNotFoundException | SourceNotFoundException) {
             return new JsonResponse(['error' => 'Endpoint not found.'], Response::HTTP_NOT_FOUND);
         }
 

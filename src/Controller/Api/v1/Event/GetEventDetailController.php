@@ -27,7 +27,7 @@ final class GetEventDetailController
             return new JsonResponse(null, Response::HTTP_UNAUTHORIZED);
         }
 
-        $detail = $this->getEventDetailUseCase->execute($id);
+        $detail = $this->getEventDetailUseCase->execute($id, $user->getId());
 
         if ($detail === null) {
             return new JsonResponse(['error' => 'Event not found.'], Response::HTTP_NOT_FOUND);

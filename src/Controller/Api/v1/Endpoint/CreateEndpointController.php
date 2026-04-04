@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\v1\Endpoint;
 
 use App\Application\UseCase\Endpoint\AddEndpointUseCase;
+use App\Domain\Exception\SourceNotFoundException;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,7 +55,9 @@ final class CreateEndpointController
 
         try {
             $id       = Uuid::v7()->toRfc4122();
-            $endpoint = $this->addEndpointUseCase->execute($id, $sourceId, $url);
+            $endpoint = $this->addEndpointUseCase->execute($id, $sourceId, $url, $user->getId());
+        } catch (SourceNotFoundException) {
+            return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }

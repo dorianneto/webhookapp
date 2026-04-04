@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\v1\Endpoint;
 
 use App\Application\UseCase\Endpoint\ListEndpointsUseCase;
+use App\Domain\Exception\SourceNotFoundException;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +28,11 @@ final class ListEndpointsController
             return new JsonResponse(null, Response::HTTP_UNAUTHORIZED);
         }
 
-        $endpoints = $this->listEndpointsUseCase->execute($sourceId);
+        try {
+            $endpoints = $this->listEndpointsUseCase->execute($sourceId, $user->getId());
+        } catch (SourceNotFoundException) {
+            return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
+        }
 
         return new JsonResponse(array_map(static fn($endpoint) => [
             'id'        => $endpoint->getId(),

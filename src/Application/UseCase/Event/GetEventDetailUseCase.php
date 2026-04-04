@@ -8,6 +8,7 @@ use App\Application\Port\DeliveryAttemptRepositoryPort;
 use App\Application\Port\EndpointRepositoryPort;
 use App\Application\Port\EventEndpointDeliveryRepositoryPort;
 use App\Application\Port\EventRepositoryPort;
+use App\Application\Port\SourceRepositoryPort;
 use App\Application\Value\EndpointDeliveryDetail;
 use App\Application\Value\EventDetail;
 
@@ -18,13 +19,18 @@ final class GetEventDetailUseCase
         private readonly EventEndpointDeliveryRepositoryPort $deliveryRepository,
         private readonly EndpointRepositoryPort $endpointRepository,
         private readonly DeliveryAttemptRepositoryPort $attemptRepository,
+        private readonly SourceRepositoryPort $sourceRepository,
     ) {}
 
-    public function execute(string $eventId): ?EventDetail
+    public function execute(string $eventId, string $userId): ?EventDetail
     {
         $event = $this->eventRepository->findById($eventId);
 
         if ($event === null) {
+            return null;
+        }
+
+        if ($this->sourceRepository->findById($event->getSourceId(), $userId) === null) {
             return null;
         }
 

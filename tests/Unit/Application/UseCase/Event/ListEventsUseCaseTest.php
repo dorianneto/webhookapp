@@ -2,36 +2,37 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Application\UseCase\Endpoint;
+namespace App\Tests\Unit\Application\UseCase\Event;
 
-use App\Application\Port\EndpointRepositoryPort;
+use App\Application\Port\EventRepositoryPort;
 use App\Application\Port\SourceRepositoryPort;
-use App\Application\UseCase\Endpoint\ListEndpointsUseCase;
-use App\Domain\Endpoint;
+use App\Application\UseCase\Event\ListEventsUseCase;
+use App\Domain\Event;
+use App\Domain\EventStatus;
 use App\Domain\Exception\SourceNotFoundException;
 use App\Domain\Source;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class ListEndpointsUseCaseTest extends TestCase
+final class ListEventsUseCaseTest extends TestCase
 {
-    private EndpointRepositoryPort&MockObject $repository;
+    private EventRepositoryPort&MockObject $eventRepository;
     private SourceRepositoryPort&MockObject $sourceRepository;
-    private ListEndpointsUseCase $useCase;
+    private ListEventsUseCase $useCase;
 
     protected function setUp(): void
     {
-        $this->repository       = $this->createMock(EndpointRepositoryPort::class);
+        $this->eventRepository  = $this->createMock(EventRepositoryPort::class);
         $this->sourceRepository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase          = new ListEndpointsUseCase($this->repository, $this->sourceRepository);
+        $this->useCase          = new ListEventsUseCase($this->eventRepository, $this->sourceRepository);
     }
 
     public function testExecuteReturnsList(): void
     {
-        $endpoints = [
-            new Endpoint('id-1', 'source-id', 'https://example.com/a', new \DateTimeImmutable()),
-            new Endpoint('id-2', 'source-id', 'https://example.com/b', new \DateTimeImmutable()),
+        $events = [
+            new Event('event-1', 'source-id', 'POST', [], '', EventStatus::Pending, new \DateTimeImmutable()),
+            new Event('event-2', 'source-id', 'GET', [], '', EventStatus::Delivered, new \DateTimeImmutable()),
         ];
 
         $this->sourceRepository
@@ -39,27 +40,27 @@ final class ListEndpointsUseCaseTest extends TestCase
             ->with('source-id', 'user-id')
             ->willReturn($this->createStub(Source::class));
 
-        $this->repository
+        $this->eventRepository
             ->expects($this->once())
-            ->method('findAllBySource')
-            ->with('source-id')
-            ->willReturn($endpoints);
+            ->method('findRecentBySource')
+            ->with('source-id', 100)
+            ->willReturn($events);
 
         $result = $this->useCase->execute('source-id', 'user-id');
 
-        $this->assertSame($endpoints, $result);
+        $this->assertSame($events, $result);
         $this->assertCount(2, $result);
     }
 
     #[AllowMockObjectsWithoutExpectations]
-    public function testExecuteReturnsEmptyArrayWhenNoEndpoints(): void
+    public function testExecuteReturnsEmptyArrayWhenNoEvents(): void
     {
         $this->sourceRepository
             ->method('findById')
             ->willReturn($this->createStub(Source::class));
 
-        $this->repository
-            ->method('findAllBySource')
+        $this->eventRepository
+            ->method('findRecentBySource')
             ->willReturn([]);
 
         $result = $this->useCase->execute('source-id', 'user-id');
@@ -73,7 +74,7 @@ final class ListEndpointsUseCaseTest extends TestCase
             ->method('findById')
             ->willReturn(null);
 
-        $this->repository->expects($this->never())->method('findAllBySource');
+        $this->eventRepository->expects($this->never())->method('findRecentBySource');
 
         $this->expectException(SourceNotFoundException::class);
 
