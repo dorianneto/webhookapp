@@ -174,13 +174,13 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] Unit tests: success on first attempt, retry scheduling, exhausted retries, event status recomputation (concurrent delivery scenarios covered via mocks)
 
 ### 6.2 Infrastructure
-- [ ] **6.2.1** `GuzzleHttpDeliveryAdapter` (or `SymfonyHttpClientAdapter`) implements `HttpDeliveryPort`
+- [x] **6.2.1** `GuzzleHttpDeliveryAdapter` (or `SymfonyHttpClientAdapter`) implements `HttpDeliveryPort`
   - Truncate `responseBody` to 500 chars preserving valid UTF-8 (`mb_substr`)
   - Catch connection/timeout exceptions → `DeliveryResult` with `success = false`, null `statusCode`
-- [ ] **6.2.2** `DoctrineDeliveryAttemptRepository` implements `DeliveryAttemptRepositoryPort`
-- [ ] **6.2.3** `DoctrineEventEndpointDeliveryRepository` implements `EventEndpointDeliveryRepositoryPort`
-- [ ] **6.2.4** `DeliverEventMessageHandler` — Symfony Messenger handler for `DeliverEventMessage`; calls `ProcessDeliveryUseCase`; uses Messenger's built-in retry stamps for delay scheduling
-- [ ] **6.2.5** Configure `messenger.yaml`: `async` transport → Doctrine, retry strategy disabled (manual retry management in use case), worker time-limit
+- [x] **6.2.2** `DoctrineDeliveryAttemptRepository` implements `DeliveryAttemptRepositoryPort`
+- [x] **6.2.3** `DoctrineEventEndpointDeliveryRepository` implements `EventEndpointDeliveryRepositoryPort`
+- [x] **6.2.4** `DeliverEventMessageHandler` — Symfony Messenger handler for `DeliverEventMessage`; calls `ProcessDeliveryUseCase`; uses Messenger's built-in retry stamps for delay scheduling
+- [x] **6.2.5** Configure `messenger.yaml`: `async` transport → Doctrine, retry strategy disabled (manual retry management in use case), worker time-limit
 
 ---
 

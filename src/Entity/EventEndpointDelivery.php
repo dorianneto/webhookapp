@@ -63,6 +63,12 @@ class EventEndpointDelivery
         );
     }
 
+    public function setStatus(EventStatus $status): void
+    {
+        $this->status = $status;
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
     public function toDomain(): DomainEventEndpointDelivery
     {
         return new DomainEventEndpointDelivery(
