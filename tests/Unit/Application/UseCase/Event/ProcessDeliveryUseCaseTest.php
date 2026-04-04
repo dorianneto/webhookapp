@@ -151,6 +151,38 @@ final class ProcessDeliveryUseCaseTest extends TestCase
     }
 
     #[AllowMockObjectsWithoutExpectations]
+    public function testFailureOnAttempt3ReEnqueuesWithDelay(): void
+    {
+        $this->setupCommonStubs($this->failureResult());
+
+        $this->queue
+            ->expects($this->once())
+            ->method('enqueue')
+            ->with(
+                $this->callback(fn(DeliverEventMessage $m) => $m->attemptNumber === 4),
+                1_800_000,
+            );
+
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 3));
+    }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testFailureOnAttempt4ReEnqueuesWithDelay(): void
+    {
+        $this->setupCommonStubs($this->failureResult());
+
+        $this->queue
+            ->expects($this->once())
+            ->method('enqueue')
+            ->with(
+                $this->callback(fn(DeliverEventMessage $m) => $m->attemptNumber === 5),
+                7_200_000,
+            );
+
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 4));
+    }
+
+    #[AllowMockObjectsWithoutExpectations]
     public function testFailureOnAttempt5MarksDeliveryFailed(): void
     {
         $this->setupCommonStubs($this->failureResult(), EventStatus::Failed);

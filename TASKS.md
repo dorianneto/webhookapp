@@ -229,32 +229,32 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 - [x] **8.3** Input validation — reject empty source names, invalid endpoint URLs (use Symfony Validator or domain-layer assertions); return `422` with error details
 - [x] **8.4** CORS — configure Symfony to allow requests from itself server origin in development
 - [x] **8.5** Error responses — consistent JSON error shape `{ "error": "message" }` for `4xx`/`5xx`
-- [ ] **8.6** UUIDv7 generation utility — confirmed available via `symfony/uid` (`Uuid::v7()`)
+- [x] **8.6** UUIDv7 generation utility — confirmed available via `symfony/uid` (`Uuid::v7()`)
 
 ---
 
 ## Phase 9 — Testing
 
-- [ ] **9.1** `CreateSourceUseCaseTest`
-- [ ] **9.2** `DeleteSourceUseCaseTest`
-- [ ] **9.3** `AddEndpointUseCaseTest`
-- [ ] **9.4** `IngestEventUseCaseTest` — source not found, no active endpoints, multiple endpoints enqueued
-- [ ] **9.5** `ProcessDeliveryUseCaseTest`:
+- [x] **9.1** `CreateSourceUseCaseTest`
+- [x] **9.2** `DeleteSourceUseCaseTest`
+- [x] **9.3** `AddEndpointUseCaseTest`
+- [x] **9.4** `IngestEventUseCaseTest` — source not found, no active endpoints, multiple endpoints enqueued
+- [x] **9.5** `ProcessDeliveryUseCaseTest`:
   - 2xx response → delivery marked delivered, event status recomputed
   - Non-2xx on attempt 1–4 → re-enqueued with correct delay
   - Failure on attempt 5 → delivery marked failed, event status recomputed
   - Mixed endpoint results → event status derivation (any-failed, all-delivered, otherwise-pending)
-- [ ] **9.6** `EventStatusRecomputationTest` — all delivery rows queried (not just updated row); atomicity ensured by transaction mock
-- [ ] **9.7** `RegistrationUseCaseTest` — duplicate email returns error
-- [ ] **9.8** Verify all tests pass: `php bin/phpunit`
+- [x] **9.6** `EventStatusRecomputationTest` — all delivery rows queried (not just updated row); atomicity ensured by transaction mock
+- [x] **9.7** `RegistrationUseCaseTest` — duplicate email returns error
+- [x] **9.8** Verify all tests pass: `php bin/phpunit`
 
 ---
 
 ## Phase 10 — Production Readiness
 
-- [ ] **10.1** `APP_ENV=prod` configuration — disable debug, enable OPcache
-- [ ] **10.2** Document `docker compose up` as the single start command in README (optional — only if explicitly requested)
-- [ ] **10.3** Confirm all four Docker services start cleanly and end-to-end flow works:
+- [x] **10.1** `APP_ENV=prod` configuration — disable debug, enable OPcache
+- [x] **10.2** Document `docker compose up` as the single start command in README (optional — only if explicitly requested)
+- [x] **10.3** Confirm all four Docker services start cleanly and end-to-end flow works:
   1. Register → login → create source → copy inbound URL
   2. Add endpoint
   3. `curl -X POST <inbound_url> -d '{"test":1}'`
