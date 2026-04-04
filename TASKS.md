@@ -131,16 +131,16 @@ All tasks follow the architecture and constraints defined in `PRD.md` and `CLAUD
 ## Phase 5 — Event Ingestion
 
 ### 5.1 Domain & Application layer
-- [ ] **5.1.1** Port interface `EventRepositoryPort` — `save(Event)`, `findById(id)`, `findRecentBySource(sourceId, limit)`, `updateStatus(id, status)`
-- [ ] **5.1.2** Port interface `DeliveryQueuePort` — `enqueue(DeliverEventMessage)`
-- [ ] **5.1.3** Use case `IngestEventUseCase`:
+- [x] **5.1.1** Port interface `EventRepositoryPort` — `save(Event)`, `findById(id)`, `findRecentBySource(sourceId, limit)`, `updateStatus(id, status)`
+- [x] **5.1.2** Port interface `DeliveryQueuePort` — `enqueue(DeliverEventMessage)`
+- [x] **5.1.3** Use case `IngestEventUseCase`:
   1. Lookup source by `inbound_uuid` — throw `SourceNotFoundException` if not found
   2. Persist the `Event` (status = `pending`)
   3. Fetch all active endpoints for the source
   4. For each endpoint, create an `EventEndpointDelivery` row (status = `pending`)
   5. Enqueue one `DeliverEventMessage` per endpoint via `DeliveryQueuePort`
   6. Return immediately
-- [ ] Unit tests: source not found, no endpoints (still 200), multiple endpoints enqueued
+- [x] Unit tests: source not found, no endpoints (still 200), multiple endpoints enqueued
 
 ### 5.2 Infrastructure
 - [ ] **5.2.1** `DoctrineEventRepository` implements `EventRepositoryPort`

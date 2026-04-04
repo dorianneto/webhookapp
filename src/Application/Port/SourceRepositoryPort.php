@@ -16,4 +16,6 @@ interface SourceRepositoryPort
     public function findAllByUser(string $userId): array;
 
     public function delete(string $id, string $userId): void;
+
+    public function findByInboundUuid(string $inboundUuid): ?Source;
 }
