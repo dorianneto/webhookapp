@@ -19,3 +19,8 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
