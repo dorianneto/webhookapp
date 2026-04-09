@@ -19,8 +19,8 @@ For npx: `docker compose exec -T app bash -c "cd frontend && node /usr/local/lib
 
 ## 2. Design Tokens
 
-- [ ] Override `--primary` in `index.css` to `#6366f1` (indigo) for both light and dark themes
-- [ ] Set `--radius` to `0.5rem` in the shadcn CSS variable block
+- [x] Override `--primary` in `index.css` to `#6366f1` (indigo) for both light and dark themes — light: `oklch(0.585 0.233 264.4)`, dark: `oklch(0.664 0.187 264.4)`; `--ring` updated to match
+- [x] Set `--radius` to `0.5rem` in the shadcn CSS variable block
 
 ## 3. Shared Layout
 
