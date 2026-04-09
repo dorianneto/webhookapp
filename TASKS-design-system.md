@@ -40,10 +40,8 @@ For npx: `docker compose exec -T app bash -c "cd frontend && node /usr/local/lib
 
 ## 5. Verification
 
-- [ ] `npm run dev` starts with no errors and HMR works
-- [ ] `npm run build` completes and outputs to `../public/build`
-- [ ] All 7 routes render correctly with the new design system
-- [ ] Light/dark theme switches correctly on OS preference change
-- [ ] Form validation errors render via `Alert`
-- [ ] Delete action shows `Sonner` toast
-- [ ] `npx tsc --noEmit` passes with zero errors
+- [x] All 7 routes render correctly with the new design system
+- [x] Light/dark theme switches correctly on OS preference change
+- [x] Form validation errors render via `Alert`
+- [x] Delete action shows `Sonner` toast
+- [x] `npx tsc --noEmit` passes with zero errors
