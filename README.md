@@ -7,7 +7,7 @@ A fully Open Source **Webhook-as-a-Service (WaaS)** platform that receives webho
 | Layer | Technology |
 |-------|-----------|
 | Backend | PHP 8.4 / Symfony 7 |
-| Frontend | React 18 + TypeScript + Vite |
+| Frontend | React 18 + TypeScript + Vite + shadcn/ui + Tailwind CSS v4 |
 | Database | PostgreSQL 17 |
 | Queue | Symfony Messenger (Doctrine transport) |
 | Deployment | Docker Compose (monolith) |
@@ -96,6 +96,8 @@ php bin/phpunit                               # run all tests
 npm run build  # production build → public/
 npm run watch  # Vite dev watch
 ```
+
+UI is built with **shadcn/ui** components and **Tailwind CSS v4**. All components live in `frontend/src/components/ui/`.
 
 ## Data Model
 
