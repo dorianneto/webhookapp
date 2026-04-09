@@ -37,11 +37,15 @@ npm run build  # Production build → output goes to Symfony's public/ directory
 
 ### Hexagonal Architecture (Ports & Adapters)
 The backend is strictly layered:
-- **Domain layer** — business logic, entities, value objects, use cases. No Symfony or Doctrine references here.
-- **Application layer** — use cases / command handlers that orchestrate domain objects through ports (interfaces).
-- **Infrastructure/adapters** — Symfony controllers, Doctrine repositories, Messenger handlers. These implement the ports and are the only layer that knows about the framework.
 
-Domain code must never import from `Symfony\` or `Doctrine\` namespaces.
+- **`src/Domain/`** — Pure business entities (`Source`, `Event`, `Endpoint`, `DeliveryAttempt`, `EventEndpointDelivery`, `EventStatus`), value objects, and domain exceptions. No Symfony or Doctrine imports allowed here.
+- **`src/Application/`** — Ports (interfaces in `Port/`), use cases (`UseCase/` grouped by entity), Messenger messages (`Message/`), and value objects (`Value/`). Orchestrates domain objects; no framework code.
+- **`src/Entity/`** — Doctrine ORM entities (separate from domain entities). These are infrastructure adapters mapped to the DB tables.
+- **`src/Controller/Api/v1/`** — Symfony controllers grouped by resource (`Source/`, `Endpoint/`, `Event/`).
+- **`src/Infrastructure/`** — Concrete adapters: `Http/` (outbound HTTP delivery), `Messaging/` (Messenger handlers), `Persistence/` (Doctrine repositories), `Transaction/` (DB transaction wrapper).
+- **`src/Security/`** and **`src/EventSubscriber/`** — Symfony security voter/authenticator and event subscribers.
+
+Domain and Application code must never import from `Symfony\` or `Doctrine\` namespaces.
 
 ### Queue & Delivery
 - Inbound webhook at `POST /in/{uuid}` persists the event and enqueues one Messenger message per active Endpoint — returns `200 OK` immediately.
@@ -68,7 +72,42 @@ All schema changes via Doctrine Migrations only — no manual SQL. Every migrati
 
 ### Frontend
 - React Router for routing, `useState` + `fetch` for state (no Redux/Zustand).
+- Auth state is managed via `src/contexts/AuthContext.tsx` (React Context + `useAuth()` hook). `ProtectedRoute` uses this context.
+- UI layer: **shadcn/ui** components (in `src/components/ui/`) + **Tailwind CSS v4** (Vite plugin, no `tailwind.config.js`). All pages use the shared `<Layout>` component (`src/components/Layout.tsx`).
 - In production, the React build is served as static files from Symfony's `public/` directory — no separate Node server.
+
+## Design System
+
+The frontend uses **shadcn/ui** + **Tailwind CSS v4**. All new UI work must follow these rules:
+
+- Use shadcn components from `src/components/ui/` — never write custom component primitives from scratch.
+- Style with Tailwind utility classes only — no inline `style={}` objects, no separate CSS files per component.
+- Wrap every protected page in `<Layout>` (`src/components/Layout.tsx`).
+- Use the `cn()` helper from `src/lib/utils.ts` (clsx + tailwind-merge) when combining conditional classes.
+
+### Component conventions
+
+| Use case | Component |
+|---|---|
+| Page sections / containers | `Card` + `CardHeader` + `CardContent` |
+| Data lists | `Table` + `TableHeader` / `TableBody` / `TableRow` / `TableCell` |
+| Status indicators | `Badge` (variant drives color: `default`, `destructive`, `secondary`) |
+| Navigation context | `Breadcrumb` |
+| Inline errors / API errors | `Alert` |
+| Mutation feedback (create, delete) | `Sonner` toast |
+| Destructive actions | `Button variant="destructive"` |
+
+### Design tokens
+
+Tokens are CSS variables defined in `frontend/src/index.css` via shadcn's slate base. Customize only through these variables — never hardcode color values.
+
+| Token | Value | Intent |
+|---|---|---|
+| `--primary` | `oklch(0.585 0.233 264.4)` (indigo) | Brand accent |
+| `--destructive` | `oklch(0.577 0.245 27.325)` (red) | Delete / error |
+| `--radius` | `0.5rem` | Border radius base |
+
+Dark mode is handled automatically via shadcn's CSS variable blocks — both light and dark themes are defined in `index.css`.
 
 ## Testing
 - Unit tests only (PHPUnit). Integration tests are out of scope.
