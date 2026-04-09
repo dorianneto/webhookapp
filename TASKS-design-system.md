@@ -30,13 +30,13 @@ For npx: `docker compose exec -T app bash -c "cd frontend && node /usr/local/lib
 
 ## 4. Page Migrations
 
-- [ ] **LoginPage** — replace inline styles with `Card`, `Input`, `Label`, `Button`, `Alert`
-- [ ] **RegisterPage** — replace inline styles with `Card`, `Input`, `Label`, `Button`, `Alert`
-- [ ] **DashboardPage** — replace raw table with shadcn `Table`; use `Button variant="destructive"` for delete; add `Sonner` toast on delete
-- [ ] **NewSourcePage** — replace inline styles with `Input`, `Label`, `Button`, `Alert`; add `Breadcrumb`
-- [ ] **NewEndpointPage** — replace inline styles with `Input`, `Label`, `Button`, `Alert`; add `Breadcrumb`
-- [ ] **SourceDetailPage** — use `Card` per section, shadcn `Table` for endpoints and events, `Badge` for event status, `Breadcrumb`
-- [ ] **EventDetailPage** — use `Card` for raw payload, shadcn `Table` for delivery attempts, `Badge` for status codes, `Breadcrumb`
+- [x] **LoginPage** — replace inline styles with `Card`, `Input`, `Label`, `Button`, `Alert`
+- [x] **RegisterPage** — replace inline styles with `Card`, `Input`, `Label`, `Button`, `Alert`
+- [x] **DashboardPage** — replace raw table with shadcn `Table`; use `Button variant="destructive"` for delete; add `Sonner` toast on delete
+- [x] **NewSourcePage** — replace inline styles with `Input`, `Label`, `Button`, `Alert`; add `Breadcrumb`
+- [x] **NewEndpointPage** — replace inline styles with `Input`, `Label`, `Button`, `Alert`; add `Breadcrumb`
+- [x] **SourceDetailPage** — use `Card` per section, shadcn `Table` for endpoints and events, `Badge` for event status, `Breadcrumb`
+- [x] **EventDetailPage** — use `Card` for raw payload, shadcn `Table` for delivery attempts, `Badge` for status codes, `Breadcrumb`
 
 ## 5. Verification
 

@@ -1,6 +1,20 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { apiFetch } from '../lib/apiFetch'
+import { toast } from 'sonner'
+import { apiFetch } from '@/lib/apiFetch'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 interface Source {
   id: string
@@ -24,10 +38,18 @@ interface Event {
   receivedAt: string
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  pending: '#888',
-  delivered: '#2a7a2a',
-  failed: '#c0392b',
+type EventStatus = Event['status']
+
+function statusBadgeClass(status: EventStatus) {
+  if (status === 'delivered') return 'bg-green-600 hover:bg-green-700 text-white'
+  if (status === 'failed') return ''
+  return ''
+}
+
+function statusBadgeVariant(status: EventStatus): 'default' | 'secondary' | 'destructive' {
+  if (status === 'delivered') return 'default'
+  if (status === 'failed') return 'destructive'
+  return 'secondary'
 }
 
 export default function SourceDetailPage() {
@@ -57,8 +79,7 @@ export default function SourceDetailPage() {
       }),
     ])
       .then(([sources, endpointList, eventList]) => {
-        const found = sources.find((s) => s.id === sourceId) ?? null
-        setSource(found)
+        setSource(sources.find((s) => s.id === sourceId) ?? null)
         setEndpoints(endpointList)
         setEvents(eventList)
       })
@@ -84,125 +105,139 @@ export default function SourceDetailPage() {
     const res = await apiFetch(`/api/v1/endpoints/${id}`, { method: 'DELETE' })
     if (res.ok) {
       setEndpoints((prev) => prev.filter((e) => e.id !== id))
+      toast.success('Endpoint deleted.')
     } else {
-      alert('Failed to delete endpoint.')
+      toast.error('Failed to delete endpoint.')
     }
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <div style={{ marginBottom: 16 }}>
-        <Link to="/">← Back to Sources</Link>
-      </div>
+    <div className="space-y-6">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Sources</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{source?.name ?? sourceId}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
-      <h1 style={{ marginTop: 0 }}>{source?.name ?? sourceId}</h1>
+      <h1 className="text-2xl font-semibold">{source?.name ?? sourceId}</h1>
 
-      {loading && <p>Loading…</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
+
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {!loading && !error && (
         <>
-          <div style={{ marginBottom: 32 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <h2 style={{ margin: 0 }}>Endpoints</h2>
-              <button onClick={() => navigate(`/sources/${sourceId}/endpoints/new`)}>Add Endpoint</button>
-            </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-base">Endpoints</CardTitle>
+              <Button size="sm" onClick={() => navigate(`/sources/${sourceId}/endpoints/new`)}>
+                Add Endpoint
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {endpoints.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No endpoints yet. Add one to start receiving webhooks.</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>URL</TableHead>
+                      <TableHead>Created</TableHead>
+                      <TableHead />
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {endpoints.map((endpoint) => (
+                      <TableRow key={endpoint.id}>
+                        <TableCell>
+                          <code className="text-xs">{endpoint.url}</code>
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {new Date(endpoint.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => void handleDeleteEndpoint(endpoint.id)}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
 
-            {endpoints.length === 0 && (
-              <p style={{ color: '#666' }}>No endpoints yet. Add one to start receiving webhooks.</p>
-            )}
-
-            {endpoints.length > 0 && (
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr>
-                    <th style={thStyle}>URL</th>
-                    <th style={thStyle}>Created</th>
-                    <th style={thStyle}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {endpoints.map((endpoint) => (
-                    <tr key={endpoint.id}>
-                      <td style={tdStyle}>
-                        <code style={{ fontSize: 13 }}>{endpoint.url}</code>
-                      </td>
-                      <td style={tdStyle}>
-                        {new Date(endpoint.createdAt).toLocaleDateString()}
-                      </td>
-                      <td style={{ ...tdStyle, textAlign: 'right' }}>
-                        <button onClick={() => handleDeleteEndpoint(endpoint.id)}>Delete</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <h2 style={{ margin: 0 }}>Events</h2>
-              <button onClick={refreshEvents} disabled={eventsLoading}>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-base">Events</CardTitle>
+              <Button size="sm" variant="outline" onClick={refreshEvents} disabled={eventsLoading}>
                 {eventsLoading ? 'Refreshing…' : 'Refresh'}
-              </button>
-            </div>
-
-            {events.length === 0 && (
-              <p style={{ color: '#666' }}>No events received yet.</p>
-            )}
-
-            {events.length > 0 && (
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr>
-                    <th style={thStyle}>Received</th>
-                    <th style={thStyle}>Method</th>
-                    <th style={thStyle}>Status</th>
-                    <th style={thStyle}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {events.map((event) => (
-                    <tr key={event.id}>
-                      <td style={tdStyle}>
-                        {new Date(event.receivedAt).toLocaleString()}
-                      </td>
-                      <td style={tdStyle}>
-                        <code>{event.method}</code>
-                      </td>
-                      <td style={tdStyle}>
-                        <span style={{
-                          color: STATUS_COLORS[event.status] ?? '#888',
-                          fontWeight: 600,
-                          textTransform: 'capitalize',
-                        }}>
-                          {event.status}
-                        </span>
-                      </td>
-                      <td style={{ ...tdStyle, textAlign: 'right' }}>
-                        <Link to={`/sources/${sourceId}/events/${event.id}`}>View</Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {events.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No events received yet.</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Received</TableHead>
+                      <TableHead>Method</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead />
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {events.map((event) => (
+                      <TableRow key={event.id}>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {new Date(event.receivedAt).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          <code className="text-xs">{event.method}</code>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={statusBadgeVariant(event.status)}
+                            className={statusBadgeClass(event.status)}
+                          >
+                            {event.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Link
+                            to={`/sources/${sourceId}/events/${event.id}`}
+                            className="text-sm text-primary underline-offset-4 hover:underline"
+                          >
+                            View
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
         </>
       )}
     </div>
   )
-}
-
-const thStyle: React.CSSProperties = {
-  textAlign: 'left',
-  padding: '8px 12px',
-  borderBottom: '2px solid #ddd',
-}
-
-const tdStyle: React.CSSProperties = {
-  padding: '8px 12px',
-  borderBottom: '1px solid #eee',
-  verticalAlign: 'middle',
 }

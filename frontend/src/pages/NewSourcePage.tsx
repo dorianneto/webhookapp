@@ -1,7 +1,20 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { apiFetch } from '../lib/apiFetch'
+import { apiFetch } from '@/lib/apiFetch'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 interface CreateSourceResponse {
   id: string
@@ -46,30 +59,50 @@ export default function NewSourcePage() {
   }
 
   return (
-    <div style={{ maxWidth: 480, margin: '80px auto', padding: '0 16px' }}>
-      <h1>New Source</h1>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label htmlFor="name">Name</label>
-          <br />
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            autoComplete="off"
-            style={{ width: '100%', padding: '8px', marginTop: 4 }}
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: '10px' }}>
-          {loading ? 'Creating…' : 'Create Source'}
-        </button>
-      </form>
-      <p style={{ marginTop: 16 }}>
-        <Link to="/">Back to Sources</Link>
-      </p>
+    <div className="space-y-6">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Sources</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>New Source</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      <Card className="max-w-md">
+        <CardHeader>
+          <CardTitle>New Source</CardTitle>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                autoComplete="off"
+                placeholder="My Stripe account"
+              />
+            </div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Creating…' : 'Create Source'}
+            </Button>
+          </CardContent>
+        </form>
+      </Card>
     </div>
   )
 }

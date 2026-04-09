@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '@/contexts/AuthContext'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -28,43 +33,56 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '80px auto', padding: '0 16px' }}>
-      <h1>Sign in</h1>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label htmlFor="email">Email</label>
-          <br />
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="email"
-            style={{ width: '100%', padding: '8px', marginTop: 4 }}
-          />
-        </div>
-        <div style={{ marginBottom: 12 }}>
-          <label htmlFor="password">Password</label>
-          <br />
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-            style={{ width: '100%', padding: '8px', marginTop: 4 }}
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: '10px' }}>
-          {loading ? 'Signing in…' : 'Sign in'}
-        </button>
-      </form>
-      <p style={{ marginTop: 16 }}>
-        No account? <Link to="/register">Register</Link>
-      </p>
+    <div className="min-h-svh flex items-center justify-center p-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Sign in</CardTitle>
+          <CardDescription>Enter your credentials to continue.</CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                placeholder="you@example.com"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
+            </div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Signing in…' : 'Sign in'}
+            </Button>
+            <p className="text-sm text-muted-foreground text-center">
+              No account?{' '}
+              <Link to="/register" className="text-primary underline-offset-4 hover:underline">
+                Register
+              </Link>
+            </p>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
   )
 }

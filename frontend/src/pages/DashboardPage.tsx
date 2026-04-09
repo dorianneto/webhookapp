@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { apiFetch } from '../lib/apiFetch'
+import { toast } from 'sonner'
+import { apiFetch } from '@/lib/apiFetch'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 interface Source {
   id: string
@@ -12,7 +15,6 @@ interface Source {
 }
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth()
   const navigate = useNavigate()
 
   const [sources, setSources] = useState<Source[]>([])
@@ -36,78 +38,65 @@ export default function DashboardPage() {
     const res = await apiFetch(`/api/v1/sources/${id}`, { method: 'DELETE' })
     if (res.ok) {
       setSources((prev) => prev.filter((s) => s.id !== id))
+      toast.success('Source deleted.')
     } else {
-      alert('Failed to delete source.')
+      toast.error('Failed to delete source.')
     }
   }
 
-  const handleLogout = async () => {
-    await logout()
-  }
-
   return (
-    <div style={{ padding: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Sources</h1>
-        <div>
-          <span style={{ marginRight: 16 }}>{user?.email}</span>
-          <button onClick={handleLogout}>Sign out</button>
-        </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Sources</h1>
+        <Button onClick={() => navigate('/sources/new')}>New Source</Button>
       </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <button onClick={() => navigate('/sources/new')}>New Source</button>
-      </div>
+      {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
 
-      {loading && <p>Loading…</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {!loading && !error && sources.length === 0 && (
-        <p style={{ color: '#666' }}>No sources yet. Create one to get started.</p>
+        <p className="text-sm text-muted-foreground">No sources yet. Create one to get started.</p>
       )}
 
       {sources.length > 0 && (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Inbound URL</th>
-              <th style={thStyle}>Created</th>
-              <th style={thStyle}></th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Inbound URL</TableHead>
+              <TableHead>Created</TableHead>
+              <TableHead />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {sources.map((source) => (
-              <tr key={source.id}>
-                <td style={tdStyle}>
-                  <Link to={`/sources/${source.id}`}>{source.name}</Link>
-                </td>
-                <td style={tdStyle}>
-                  <code style={{ fontSize: 13 }}>{source.inboundUrl}</code>
-                </td>
-                <td style={tdStyle}>
+              <TableRow key={source.id}>
+                <TableCell>
+                  <Link to={`/sources/${source.id}`} className="font-medium hover:underline">
+                    {source.name}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <code className="text-xs">{source.inboundUrl}</code>
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">
                   {new Date(source.createdAt).toLocaleDateString()}
-                </td>
-                <td style={{ ...tdStyle, textAlign: 'right' }}>
-                  <button onClick={() => handleDelete(source.id)}>Delete</button>
-                </td>
-              </tr>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button variant="destructive" size="sm" onClick={() => void handleDelete(source.id)}>
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       )}
     </div>
   )
-}
-
-const thStyle: React.CSSProperties = {
-  textAlign: 'left',
-  padding: '8px 12px',
-  borderBottom: '2px solid #ddd',
-}
-
-const tdStyle: React.CSSProperties = {
-  padding: '8px 12px',
-  borderBottom: '1px solid #eee',
-  verticalAlign: 'middle',
 }
