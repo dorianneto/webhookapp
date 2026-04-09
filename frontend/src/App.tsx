@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
@@ -20,7 +21,9 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <Layout>
+                  <DashboardPage />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -28,7 +31,9 @@ function App() {
             path="/sources/new"
             element={
               <ProtectedRoute>
-                <NewSourcePage />
+                <Layout>
+                  <NewSourcePage />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -36,7 +41,9 @@ function App() {
             path="/sources/:sourceId/endpoints/new"
             element={
               <ProtectedRoute>
-                <NewEndpointPage />
+                <Layout>
+                  <NewEndpointPage />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -44,7 +51,9 @@ function App() {
             path="/sources/:sourceId/events/:eventId"
             element={
               <ProtectedRoute>
-                <EventDetailPage />
+                <Layout>
+                  <EventDetailPage />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -52,7 +61,9 @@ function App() {
             path="/sources/:sourceId"
             element={
               <ProtectedRoute>
-                <SourceDetailPage />
+                <Layout>
+                  <SourceDetailPage />
+                </Layout>
               </ProtectedRoute>
             }
           />

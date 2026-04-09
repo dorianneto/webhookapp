@@ -24,9 +24,9 @@ For npx: `docker compose exec -T app bash -c "cd frontend && node /usr/local/lib
 
 ## 3. Shared Layout
 
-- [ ] Create `src/components/Layout.tsx` with top nav (user email + logout button) and main content area
-- [ ] Update `src/App.tsx` to wrap protected routes with `<Layout>`
-- [ ] Delete `src/App.css`
+- [x] Create `src/components/Layout.tsx` with top nav (user email + logout button) and main content area
+- [x] Update `src/App.tsx` to wrap protected routes with `<Layout>`
+- [x] Delete `src/App.css`
 
 ## 4. Page Migrations
 
