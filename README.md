@@ -101,10 +101,71 @@ UI is built with **shadcn/ui** components and **Tailwind CSS v4**. All component
 
 ## Data Model
 
-| Table | Key columns |
-|-------|-------------|
-| `sources` | `inbound_uuid` (UUIDv7) |
-| `events` | `source_id`, `status`, `received_at` |
-| `endpoints` | `url`, `active` |
-| `event_endpoint_deliveries` | unique `(event_id, endpoint_id)` |
-| `delivery_attempts` | up to 5 per `(event_id, endpoint_id)` |
+```mermaid
+erDiagram
+    users {
+        int id PK
+        string email
+        string password
+        timestamp created_at
+    }
+
+    sources {
+        int id PK
+        int user_id FK
+        string name
+        uuid inbound_uuid
+        timestamp created_at
+    }
+
+    endpoints {
+        int id PK
+        int source_id FK
+        string url
+        timestamp created_at
+    }
+
+    events {
+        int id PK
+        int source_id FK
+        string method
+        json headers
+        text body
+        enum status
+        timestamp received_at
+    }
+
+    event_endpoint_deliveries {
+        int id PK
+        int event_id FK
+        int endpoint_id FK
+        enum status
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    delivery_attempts {
+        int id PK
+        int event_id FK
+        int endpoint_id FK
+        smallint attempt_number
+        smallint status_code
+        text response_body
+        int duration_ms
+        timestamp attempted_at
+    }
+
+    users ||--o{ sources : owns
+    sources ||--o{ endpoints : has
+    sources ||--o{ events : receives
+    events ||--o{ event_endpoint_deliveries : tracks
+    endpoints ||--o{ event_endpoint_deliveries : tracks
+    event_endpoint_deliveries ||--o{ delivery_attempts : logs
+```
+
+### Key relationships
+
+- A **Source** belongs to one user and has many **Endpoints** and many **Events**.
+- When an Event arrives, one **`event_endpoint_deliveries`** row is created per active Endpoint (unique on `(event_id, endpoint_id)`).
+- Each delivery row accumulates up to 5 **`delivery_attempts`** (exponential backoff: immediate → 30s → 5m → 30m → 2h).
+- `events.status` (`pending` / `delivered` / `failed`) is a denormalized cache recomputed atomically from all delivery rows every time a delivery row changes.
