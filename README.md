@@ -1,4 +1,4 @@
-# WebhookApp
+# HookYard
 
 A fully Open Source **Webhook-as-a-Service (WaaS)** platform that receives webhooks from third-party services and fans them out to user-defined destination URLs with automatic retries and a delivery dashboard.
 
