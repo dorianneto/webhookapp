@@ -1,4 +1,6 @@
-## Q2 2026
+<details open>
+
+<summary>Q2 2026</summary>
 
 ### App
 
@@ -18,3 +20,5 @@ WIP
 ### Marketing
 
 WIP
+
+</details>
