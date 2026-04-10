@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <div className="min-h-svh flex flex-col">
       <header className="h-14 px-6 flex items-center justify-between shrink-0">
         <Link to="/" className="font-semibold text-sm tracking-tight">
-          WebhookApp
+          HookYard
         </Link>
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">{user?.email}</span>
