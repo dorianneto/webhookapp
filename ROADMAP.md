@@ -11,7 +11,9 @@
 
 ### Infrastructure
 
-WIP
+- [ ] Deploy through github actions
+- [ ] Create unit test workflow on github
+- [ ] Create coding standard workflow on github
 
 ### Product
 
