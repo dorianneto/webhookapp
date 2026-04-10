@@ -9,12 +9,15 @@ A fully Open Source **Webhook-as-a-Service (WaaS)** platform that receives webho
 | Backend | PHP 8.4 / Symfony 7 |
 | Frontend | React 18 + TypeScript + Vite + shadcn/ui + Tailwind CSS v4 |
 | Database | PostgreSQL 17 |
-| Queue | Symfony Messenger (Doctrine transport) |
-| Deployment | Docker Compose (monolith) |
+| Queue | Symfony Messenger (AWS SQS) |
+| Deployment | AWS Elastic Beanstalk (monolith) |
 
 ## Architecture
 
 The backend follows **Hexagonal Architecture** (Ports & Adapters), keeping business logic completely isolated from the framework.
+
+<details>
+<summary>See diagram</summary>
 
 ```mermaid
 graph TD
@@ -52,6 +55,7 @@ graph TD
     style Driving fill:#2a1a1a,color:#fff,stroke:#6a2d2d
     style Driven fill:#2a2a1a,color:#fff,stroke:#6a5d2d
 ```
+</details>
 
 ### Layer Rules
 
@@ -100,6 +104,10 @@ npm run watch  # Vite dev watch
 UI is built with **shadcn/ui** components and **Tailwind CSS v4**. All components live in `frontend/src/components/ui/`.
 
 ## Data Model
+
+<details>
+<summary>See diagram</summary>
+
 
 ```mermaid
 erDiagram
@@ -162,6 +170,7 @@ erDiagram
     endpoints ||--o{ event_endpoint_deliveries : tracks
     event_endpoint_deliveries ||--o{ delivery_attempts : logs
 ```
+</details>
 
 ### Key relationships
 
