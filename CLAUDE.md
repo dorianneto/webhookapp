@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Webhook-as-a-Service (WaaS) MVP — a platform that receives webhooks from third-party services and fans them out to user-defined destination URLs with automatic retries and a delivery dashboard.
 
-**Stack:** Symfony 7 (PHP 8.3+) backend + React 18 + Vite frontend, monolith deployment, PostgreSQL 17, Symfony Messenger with Doctrine transport.
+**Stack:** Symfony 7 (PHP 8.4) backend + React 18 + Vite frontend, monolith deployment, PostgreSQL 17, Symfony Messenger (Doctrine transport in dev; AWS SQS in production).
 
 ## Development Commands
 
@@ -27,9 +27,9 @@ php bin/phpunit tests/path/to/FooTest.php   # Run a single test file
 php bin/phpunit --filter testMethodName      # Run a single test by name
 ```
 
-### Frontend
+### Frontend (run from `frontend/` directory)
 ```bash
-npm run dev    # Vite dev server with HMR (runs in `frontend` Docker service)
+npm run watch  # Vite build --watch → outputs to ../public/build (for use with Symfony dev server)
 npm run build  # Production build → output goes to Symfony's public/ directory
 ```
 
