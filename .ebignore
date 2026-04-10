@@ -1,6 +1,7 @@
 .git
 vendor/
 node_modules/
+frontend/node_modules/
 var/
 tests/
 docker/
