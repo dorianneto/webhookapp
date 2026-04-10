@@ -1,6 +1,6 @@
 <p align="center"><a href="https://hookyard.dorianneto.com" target="_blank"><img src="https://raw.githubusercontent.com/dorianneto/hookyard-art/refs/heads/main/h-white-logo.png" width="400" alt="HookYard Logo"></a></p>
 
-# HookYard
+# About HookYard
 
 Open Source **Webhook-as-a-Service (WaaS)** platform that receives webhooks from third-party services and fans them out to user-defined destination URLs with automatic retries and a delivery dashboard.
 
