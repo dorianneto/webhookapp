@@ -1,6 +1,23 @@
 # HookYard
 
-A fully Open Source **Webhook-as-a-Service (WaaS)** platform that receives webhooks from third-party services and fans them out to user-defined destination URLs with automatic retries and a delivery dashboard.
+Open Source **Webhook-as-a-Service (WaaS)** platform that receives webhooks from third-party services and fans them out to user-defined destination URLs with automatic retries and a delivery dashboard.
+
+<details>
+<summary>The metaphor</summary>
+
+> _A rail yard is a place where trains (incoming webhooks) arrive, get sorted by destination, and dispatched out on different tracks (endpoints). Cars can be re-routed if a track fails — just like retries. The yard master (the worker) orchestrates everything without the sender needing to know the details._
+
+| Rail yard concept | WaaS concept |
+|-------------------|--------------|
+| Incoming train | Inbound webhook (POST /in/{uuid}) |
+| Rail yard | HookYard platform |
+| Track / destination | Endpoint URL |
+| Dispatch | Fan-out to endpoints |
+| Re-routing on failure | Automatic retry (5 attempts) |
+| Yard master | Queue worker |
+| Cargo manifest | Delivery dashboard |
+
+</details>
 
 ## Stack
 
