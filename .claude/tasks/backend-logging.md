@@ -91,7 +91,7 @@
 - [ ] Log: source not found (`INFO`, `request_id`, `source_uuid`)
 - [ ] Log: event created and saved (`DEBUG`, `request_id`, `event_id`, `source_id`)
 - [ ] Log: no active endpoints found (`INFO`, `request_id`, `event_id`, `source_id`)
-- [ ] Log: message enqueued per endpoint (`DEBUG`, `request_id`, `event_id`, `endpoint_id`)
+- [ ] Log: message enqueued per endpoint (`INFO`, `request_id`, `event_id`, `endpoint_id`)
 - [ ] Log: ingest complete (`INFO`, `request_id`, `event_id`, `source_id`, `enqueued_count`)
 
 ---
@@ -107,7 +107,7 @@
 - [ ] Log: HTTP transport exception — no response (`WARNING`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `exception_message`)
 - [ ] Log: delivery marked `Failed` after max attempts (`ERROR`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`)
 - [ ] Log: retry enqueued (`INFO`, `request_id`, `event_id`, `endpoint_id`, `next_attempt`, `delay_ms`)
-- [ ] Log: event status recomputed (`DEBUG`, `request_id`, `event_id`, `new_status`)
+- [ ] Log: event status recomputed (`INFO`, `request_id`, `event_id`, `new_status`)
 
 ---
 

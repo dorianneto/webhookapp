@@ -79,7 +79,7 @@ Every invokable controller logs:
 | Source not found | `INFO` | `request_id`, `source_uuid` |
 | Event created and saved | `DEBUG` | `request_id`, `event_id`, `source_id` |
 | No active endpoints found | `INFO` | `request_id`, `event_id`, `source_id` |
-| Message enqueued per endpoint | `DEBUG` | `request_id`, `event_id`, `endpoint_id` |
+| Message enqueued per endpoint | `INFO` | `request_id`, `event_id`, `endpoint_id` |
 | Ingest complete | `INFO` | `request_id`, `event_id`, `source_id`, `enqueued_count` |
 
 #### `ProcessDeliveryUseCase`
@@ -92,7 +92,7 @@ Every invokable controller logs:
 | HTTP transport exception (no response) | `WARNING` | `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `exception_message` |
 | Delivery marked `Failed` (max attempts reached) | `ERROR` | `request_id`, `event_id`, `endpoint_id`, `attempt_number` |
 | Retry enqueued | `INFO` | `request_id`, `event_id`, `endpoint_id`, `next_attempt`, `delay_ms` |
-| Event status recomputed | `DEBUG` | `request_id`, `event_id`, `new_status` |
+| Event status recomputed | `INFO` | `request_id`, `event_id`, `new_status` |
 
 #### Other use cases (CRUD)
 
