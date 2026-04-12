@@ -52,11 +52,11 @@
 - `src/Infrastructure/Messaging/DeliverEventMessageHandler.php`
 - `src/Application/UseCase/Event/ProcessDeliveryUseCase.php`
 
-- [ ] Add `readonly string $requestId` constructor argument to `DeliverEventMessage`
-- [ ] In `IngestEventUseCase::execute()`: accept `string $requestId` as a new parameter; pass it when constructing `DeliverEventMessage`
-- [ ] Update `IngestEventController` to read `$request->attributes->get('request_id')` and forward it to the use case
-- [ ] In `ProcessDeliveryUseCase::execute()`: accept `string $requestId` as a new parameter
-- [ ] In `DeliverEventMessageHandler::__invoke()`: pass `$message->requestId` to `ProcessDeliveryUseCase::execute()`
+- [x] Add `readonly string $requestId` constructor argument to `DeliverEventMessage`
+- [x] In `IngestEventUseCase::execute()`: accept `string $requestId` as a new parameter; pass it when constructing `DeliverEventMessage`
+- [x] Update `IngestEventController` to read `$request->attributes->get('request_id')` and forward it to the use case
+- [x] In `ProcessDeliveryUseCase::execute()`: read `$message->requestId` directly (no extra parameter needed)
+- [x] In `DeliverEventMessageHandler::__invoke()`: pass `$message` as-is to `ProcessDeliveryUseCase::execute()`
 
 **Acceptance:** A `DeliverEventMessage` serialized to the queue includes the `requestId`; the handler passes it through to the use case unchanged.
 

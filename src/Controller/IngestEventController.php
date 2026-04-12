@@ -27,7 +27,7 @@ final class IngestEventController
         $method  = $request->getMethod();
 
         try {
-            $this->ingestEventUseCase->execute($eventId, $uuid, $method, $headers, $body);
+            $this->ingestEventUseCase->execute($request->attributes->get('request_id'), $eventId, $uuid, $method, $headers, $body);
         } catch (SourceNotFoundException) {
             return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
         }

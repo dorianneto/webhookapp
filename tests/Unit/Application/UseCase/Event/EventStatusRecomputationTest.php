@@ -87,7 +87,7 @@ final class EventStatusRecomputationTest extends TestCase
                 new EventEndpointDelivery('d1', 'event-1', 'endpoint-1', EventStatus::Delivered, new \DateTimeImmutable(), new \DateTimeImmutable()),
             ]);
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1, 'request-id'));
     }
 
     public function testStatusUpdatesAreAtomicInsideTransaction(): void
@@ -114,6 +114,6 @@ final class EventStatusRecomputationTest extends TestCase
         $this->deliveryRepository->expects($this->never())->method('updateStatus');
         $this->eventRepository->expects($this->never())->method('updateStatus');
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1, 'request-id'));
     }
 }

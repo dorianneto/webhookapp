@@ -27,6 +27,7 @@ final class IngestEventUseCase
     ) {}
 
     public function execute(
+        string $requestId,
         string $eventId,
         string $inboundUuid,
         string $method,
@@ -64,7 +65,7 @@ final class IngestEventUseCase
             );
 
             $this->deliveryRepository->save($delivery);
-            $this->queue->enqueue(new DeliverEventMessage($eventId, $endpoint->getId(), 1));
+            $this->queue->enqueue(new DeliverEventMessage($eventId, $endpoint->getId(), 1, $requestId));
         }
     }
 }

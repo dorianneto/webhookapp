@@ -10,5 +10,6 @@ final readonly class DeliverEventMessage
         public string $eventId,
         public string $endpointId,
         public int $attemptNumber,
+        public string $requestId,
     ) {}
 }

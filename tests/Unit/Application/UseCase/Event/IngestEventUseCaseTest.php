@@ -57,7 +57,7 @@ final class IngestEventUseCaseTest extends TestCase
 
         $this->expectException(SourceNotFoundException::class);
 
-        $this->useCase->execute('event-id', 'unknown-uuid', 'POST', [], '{}');
+        $this->useCase->execute('request-id', 'event-id', 'unknown-uuid', 'POST', [], '{}');
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -72,7 +72,7 @@ final class IngestEventUseCaseTest extends TestCase
         $this->deliveryRepository->expects($this->never())->method('save');
         $this->queue->expects($this->never())->method('enqueue');
 
-        $this->useCase->execute('event-id', 'inbound-uuid', 'POST', [], '{}');
+        $this->useCase->execute('request-id', 'event-id', 'inbound-uuid', 'POST', [], '{}');
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -98,7 +98,7 @@ final class IngestEventUseCaseTest extends TestCase
                 return $msg->eventId === 'event-id' && $msg->attemptNumber === 1;
             }));
 
-        $this->useCase->execute('event-id', 'inbound-uuid', 'POST', ['Content-Type' => 'application/json'], '{"test":1}');
+        $this->useCase->execute('request-id', 'event-id', 'inbound-uuid', 'POST', ['Content-Type' => 'application/json'], '{"test":1}');
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -119,6 +119,6 @@ final class IngestEventUseCaseTest extends TestCase
                     && $event->getStatus() === EventStatus::Pending;
             }));
 
-        $this->useCase->execute('event-id', 'inbound-uuid', 'POST', [], '{}');
+        $this->useCase->execute('request-id', 'event-id', 'inbound-uuid', 'POST', [], '{}');
     }
 }

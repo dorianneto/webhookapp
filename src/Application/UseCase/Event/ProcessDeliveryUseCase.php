@@ -77,7 +77,7 @@ final class ProcessDeliveryUseCase
         if (!$result->success && $message->attemptNumber < 5) {
             $delayMs = self::RETRY_DELAYS_MS[$message->attemptNumber - 1];
             $this->queue->enqueue(
-                new DeliverEventMessage($message->eventId, $message->endpointId, $message->attemptNumber + 1),
+                new DeliverEventMessage($message->eventId, $message->endpointId, $message->attemptNumber + 1, $message->requestId),
                 $delayMs,
             );
         }

@@ -110,7 +110,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
 
         $this->queue->expects($this->never())->method('enqueue');
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -131,7 +131,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
                 30_000,
             );
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -147,7 +147,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
                 300_000,
             );
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 2));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 2, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -163,7 +163,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
                 1_800_000,
             );
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 3));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 3, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -179,7 +179,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
                 7_200_000,
             );
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 4));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 4, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -199,7 +199,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
 
         $this->queue->expects($this->never())->method('enqueue');
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 5));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 5, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -221,7 +221,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
             ->method('updateStatus')
             ->with('event-1', EventStatus::Pending);
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -243,7 +243,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
             ->method('updateStatus')
             ->with('event-1', EventStatus::Delivered);
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1, 'request-id'));
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -265,6 +265,6 @@ final class ProcessDeliveryUseCaseTest extends TestCase
             ->method('updateStatus')
             ->with('event-1', EventStatus::Failed);
 
-        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1));
+        $this->useCase->execute(new DeliverEventMessage('event-1', 'endpoint-1', 1, 'request-id'));
     }
 }
