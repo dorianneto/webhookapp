@@ -9,19 +9,19 @@
 
 **File:** `config/packages/monolog.yaml`
 
-- [ ] Declare `app` in the top-level `channels` list
-- [ ] `when@dev`: add a `stream` handler for the `app` channel
+- [x] Declare `app` in the top-level `channels` list
+- [x] `when@dev`: add a `stream` handler for the `app` channel
   - type: `stream`
   - path: `%kernel.logs_dir%/%kernel.environment%.log`
   - level: `DEBUG`
   - channels: `[app]`
-- [ ] `when@prod`: add the `app` channel to the existing stderr handler (or add a dedicated one)
+- [x] `when@prod`: add the `app` channel to the existing stderr handler (or add a dedicated one)
   - type: `stream`
   - path: `php://stderr`
   - level: `INFO`
   - formatter: `monolog.formatter.json`
   - channels: `[app]`
-- [ ] Verify the `app` channel does not bleed into the `main` handler (exclude it or use `channels: [app]` type: `inclusive`)
+- [x] Verify the `app` channel does not bleed into the `main` handler (exclude it or use `channels: [app]` type: `inclusive`)
 
 **Acceptance:** `bin/console debug:config monolog` shows the `app` channel and its handlers.
 
