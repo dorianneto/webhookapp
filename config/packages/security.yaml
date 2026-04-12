@@ -30,9 +30,10 @@ security:
 
     access_control:
         - { path: ^/api/v1/register$, roles: PUBLIC_ACCESS }
-        - { path: ^/login$,    roles: PUBLIC_ACCESS }
-        - { path: ^/in/,       roles: PUBLIC_ACCESS }
-        - { path: ^/api/,      roles: ROLE_USER }
+        - { path: ^/login$,           roles: PUBLIC_ACCESS }
+        - { path: ^/in/,              roles: PUBLIC_ACCESS }
+        - { path: ^/health/,          roles: PUBLIC_ACCESS }
+        - { path: ^/api/,             roles: ROLE_USER }
 
 when@test:
     security:

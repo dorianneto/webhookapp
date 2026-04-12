@@ -18,6 +18,11 @@ ingest:
     prefix: /
     type: attribute
 
+health_check:
+    resource: ../src/Controller/HealthCheckController.php
+    prefix: /
+    type: attribute
+
 spa:
     resource: ../src/Controller/SpaController.php
     prefix: /

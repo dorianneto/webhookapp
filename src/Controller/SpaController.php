@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/{reactRouting}', name: 'spa', requirements: ['reactRouting' => '^(?!api|in).*'], priority: -10)]
+#[Route('/{reactRouting}', name: 'spa', requirements: ['reactRouting' => '^(?!api|in|health).*'], priority: -10)]
 class SpaController
 {
     public function __invoke(#[Autowire('%kernel.project_dir%')] string $projectDir): Response
