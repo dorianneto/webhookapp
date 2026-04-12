@@ -1,6 +1,6 @@
 # PRD: Backend Logging
 
-**Status:** Draft
+**Status:** Completed
 **Date:** 2026-04-11
 **Scope:** PHP backend — controllers, use cases, and the ingest/delivery pipeline
 
