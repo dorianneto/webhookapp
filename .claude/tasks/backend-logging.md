@@ -31,14 +31,14 @@
 
 **File:** `src/EventSubscriber/RequestIdSubscriber.php`
 
-- [ ] Implement `EventSubscriberInterface`
-- [ ] Subscribe to `KernelEvents::REQUEST` at priority `100`
+- [x] Implement `EventSubscriberInterface`
+- [x] Subscribe to `KernelEvents::REQUEST` at priority `100`
   - Read `X-Request-Id` from the incoming request headers
   - If absent, generate a UUIDv4 (`Symfony\Component\Uid\Uuid::v4()`)
   - Store on `$request->attributes->set('request_id', $id)`
-- [ ] Subscribe to `KernelEvents::RESPONSE`
+- [x] Subscribe to `KernelEvents::RESPONSE`
   - Echo the ID back as `X-Request-Id` response header
-- [ ] Register service (autowiring should handle it; confirm in `config/services.yaml` if needed)
+- [x] Register service (autowiring should handle it; confirm in `config/services.yaml` if needed)
 
 **Acceptance:** Any request to `/api/v1/*` or `/in/*` returns an `X-Request-Id` header; repeated requests with the same header echo it back unchanged.
 
