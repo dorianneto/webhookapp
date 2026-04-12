@@ -21,6 +21,7 @@ use App\Domain\EventStatus;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 /**
  * Focused tests for event status recomputation invariants:
@@ -56,6 +57,7 @@ final class EventStatusRecomputationTest extends TestCase
             $this->httpDelivery,
             $this->queue,
             $this->transaction,
+            new NullLogger(),
         );
     }
 

@@ -10,6 +10,7 @@ use App\Domain\Exception\EmailAlreadyTakenException;
 use App\Domain\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class RegistrationUseCaseTest extends TestCase
 {
@@ -19,7 +20,7 @@ final class RegistrationUseCaseTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(UserRepositoryPort::class);
-        $this->useCase    = new RegisterUserUseCase($this->repository);
+        $this->useCase    = new RegisterUserUseCase($this->repository, new NullLogger());
     }
 
     public function testExecuteThrowsWhenEmailAlreadyTaken(): void

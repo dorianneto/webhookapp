@@ -86,13 +86,13 @@
 
 **File:** `src/Application/UseCase/Event/IngestEventUseCase.php`
 
-- [ ] Inject `Psr\Log\LoggerInterface $logger` with `#[Autowire(service: 'monolog.logger.app')]`
-- [ ] Log: source lookup started (`DEBUG`, `request_id`, `source_uuid`)
-- [ ] Log: source not found (`INFO`, `request_id`, `source_uuid`)
-- [ ] Log: event created and saved (`DEBUG`, `request_id`, `event_id`, `source_id`)
-- [ ] Log: no active endpoints found (`INFO`, `request_id`, `event_id`, `source_id`)
-- [ ] Log: message enqueued per endpoint (`INFO`, `request_id`, `event_id`, `endpoint_id`)
-- [ ] Log: ingest complete (`INFO`, `request_id`, `event_id`, `source_id`, `enqueued_count`)
+- [x] Inject `Psr\Log\LoggerInterface $logger` (plain autowiring — `app` is the default channel)
+- [x] Log: source lookup started (`DEBUG`, `request_id`, `source_uuid`)
+- [x] Log: source not found (`INFO`, `request_id`, `source_uuid`)
+- [x] Log: event created and saved (`DEBUG`, `request_id`, `event_id`, `source_id`)
+- [x] Log: no active endpoints found (`INFO`, `request_id`, `event_id`, `source_id`)
+- [x] Log: message enqueued per endpoint (`INFO`, `request_id`, `event_id`, `endpoint_id`)
+- [x] Log: ingest complete (`INFO`, `request_id`, `event_id`, `source_id`, `enqueued_count`)
 
 ---
 
@@ -100,14 +100,14 @@
 
 **File:** `src/Application/UseCase/Event/ProcessDeliveryUseCase.php`
 
-- [ ] Inject `Psr\Log\LoggerInterface $logger` with `#[Autowire(service: 'monolog.logger.app')]`
-- [ ] Log: delivery attempt started (`INFO`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `endpoint_url`)
-- [ ] Log: HTTP delivery succeeded (`INFO`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `status_code`, `duration_ms`)
-- [ ] Log: HTTP delivery failed — non-2xx (`WARNING`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `status_code`, `duration_ms`)
-- [ ] Log: HTTP transport exception — no response (`WARNING`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `exception_message`)
-- [ ] Log: delivery marked `Failed` after max attempts (`ERROR`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`)
-- [ ] Log: retry enqueued (`INFO`, `request_id`, `event_id`, `endpoint_id`, `next_attempt`, `delay_ms`)
-- [ ] Log: event status recomputed (`INFO`, `request_id`, `event_id`, `new_status`)
+- [x] Inject `Psr\Log\LoggerInterface $logger` via `#[WithMonologChannel('hookyard')]`
+- [x] Log: delivery attempt started (`INFO`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `endpoint_url`)
+- [x] Log: HTTP delivery succeeded (`INFO`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `status_code`, `duration_ms`)
+- [x] Log: HTTP delivery failed — non-2xx (`WARNING`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `status_code`, `duration_ms`)
+- [x] Log: HTTP transport exception — no response (`WARNING`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`, `exception_message`)
+- [x] Log: delivery marked `Failed` after max attempts (`ERROR`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`)
+- [x] Log: retry enqueued (`INFO`, `request_id`, `event_id`, `endpoint_id`, `next_attempt`, `delay_ms`)
+- [x] Log: event status recomputed (`INFO`, `request_id`, `event_id`, `new_status`)
 
 ---
 
@@ -115,21 +115,20 @@
 
 **File:** `src/Infrastructure/Messaging/DeliverEventMessageHandler.php`
 
-- [ ] Inject `Psr\Log\LoggerInterface $logger` with `#[Autowire(service: 'monolog.logger.app')]`
-- [ ] Log: message received from queue (`INFO`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`)
-- [ ] Log: processing complete (`INFO`, `request_id`, `event_id`, `endpoint_id`)
-- [ ] Log: unhandled exception from use case (`ERROR`, `request_id`, `event_id`, `endpoint_id`, `exception_class`, `message`, `trace`)
+- [x] Inject `Psr\Log\LoggerInterface $logger` via `#[WithMonologChannel('hookyard')]`
+- [x] Log: message received from queue (`INFO`, `request_id`, `event_id`, `endpoint_id`, `attempt_number`)
+- [x] Log: processing complete (`INFO`, `request_id`, `event_id`, `endpoint_id`)
+- [x] Log: unhandled exception from use case (`ERROR`, `request_id`, `event_id`, `endpoint_id`, `exception_class`, `message`, `trace`)
 
 ---
 
 ## Task 8 — Logger injection and logging in `IngestEventController`
 
-**File:** `src/Controller/Api/v1/Event/IngestEventController.php`
+**File:** `src/Controller/IngestEventController.php`
 
-- [ ] Inject `Psr\Log\LoggerInterface $logger` with `#[Autowire(service: 'monolog.logger.app')]`
-- [ ] Log: ingest request received (`INFO`, `request_id`, `source_uuid`, `method`, `body_bytes`)
-- [ ] Log: source not found — 404 (`INFO`, `request_id`, `source_uuid`)
-- [ ] Log: ingest complete (`INFO`, `request_id`, `event_id`, `source_id`, `endpoint_count`)
+- [x] Inject `Psr\Log\LoggerInterface $logger` via `#[WithMonologChannel('hookyard')]`
+- [x] Log: ingest request received (`INFO`, `request_id`, `source_uuid`, `method`, `body_bytes`)
+- [x] Log: source not found — 404 (`INFO`, `request_id`, `source_uuid`)
 
 ---
 
@@ -139,56 +138,56 @@ One sub-task per controller. Each follows the same pattern: inject logger, log e
 
 ### 9a — `RegistrationController`
 **File:** `src/Controller/Api/v1/RegistrationController.php`
-- [ ] Inject logger
-- [ ] Log: request received (`INFO`, `request_id`, `route`)
-- [ ] Log: validation failure (`WARNING`, `request_id`, `violations`)
-- [ ] Log: email already taken (`INFO`, `request_id`, `route`, `exception_class`)
-- [ ] Log: user registered (`INFO`, `request_id`, `route`, `http_status`)
+- [x] Inject logger
+- [x] Log: request received (`INFO`, `request_id`, `route`)
+- [x] Log: validation failure (`WARNING`, `request_id`, `violations`)
+- [x] Log: email already taken (`INFO`, `request_id`, `route`, `exception_class`)
+- [x] Log: user registered (`INFO`, `request_id`, `route`, `http_status`)
 
 ### 9b — `CreateSourceController`
 **File:** `src/Controller/Api/v1/Source/CreateSourceController.php`
-- [ ] Inject logger
-- [ ] Log: request received, validation failure, success
+- [x] Inject logger
+- [x] Log: request received, validation failure, success
 
 ### 9c — `ListSourcesController`
 **File:** `src/Controller/Api/v1/Source/ListSourcesController.php`
-- [ ] Inject logger
-- [ ] Log: request received, success
+- [x] Inject logger
+- [x] Log: request received, success
 
 ### 9d — `DeleteSourceController`
 **File:** `src/Controller/Api/v1/Source/DeleteSourceController.php`
-- [ ] Inject logger
-- [ ] Log: request received, not found, success
+- [x] Inject logger
+- [x] Log: request received, not found, success
 
 ### 9e — `CreateEndpointController`
 **File:** `src/Controller/Api/v1/Endpoint/CreateEndpointController.php`
-- [ ] Inject logger
-- [ ] Log: request received, validation failure (invalid URL, source not found), success
+- [x] Inject logger
+- [x] Log: request received, validation failure (invalid URL, source not found), success
 
 ### 9f — `ListEndpointsController`
 **File:** `src/Controller/Api/v1/Endpoint/ListEndpointsController.php`
-- [ ] Inject logger
-- [ ] Log: request received, success
+- [x] Inject logger
+- [x] Log: request received, success
 
 ### 9g — `DeleteEndpointController`
 **File:** `src/Controller/Api/v1/Endpoint/DeleteEndpointController.php`
-- [ ] Inject logger
-- [ ] Log: request received, not found, success
+- [x] Inject logger
+- [x] Log: request received, not found, success
 
 ### 9h — `ListEventsController`
 **File:** `src/Controller/Api/v1/Event/ListEventsController.php`
-- [ ] Inject logger
-- [ ] Log: request received, source not found, success
+- [x] Inject logger
+- [x] Log: request received, source not found, success
 
 ### 9i — `GetEventDetailController`
 **File:** `src/Controller/Api/v1/Event/GetEventDetailController.php`
-- [ ] Inject logger
-- [ ] Log: request received, event not found, success
+- [x] Inject logger
+- [x] Log: request received, event not found, success
 
 ### 9j — `MeController`
 **File:** `src/Controller/Api/v1/MeController.php`
-- [ ] Inject logger
-- [ ] Log: request received, success
+- [x] Inject logger
+- [x] Log: request received, success
 
 ---
 
@@ -197,38 +196,38 @@ One sub-task per controller. Each follows the same pattern: inject logger, log e
 One sub-task per use case. Entry + success + domain exception per use case.
 
 ### 10a — `RegisterUserUseCase`
-- [ ] Inject logger, log: attempt, email taken, registered
+- [x] Inject logger, log: attempt, email taken, registered
 
 ### 10b — `CreateSourceUseCase`
-- [ ] Inject logger, log: attempt, created
+- [x] Inject logger, log: attempt, created
 
 ### 10c — `ListSourcesUseCase`
-- [ ] Inject logger, log: attempt, returned count
+- [x] Inject logger, log: attempt, returned count
 
 ### 10d — `DeleteSourceUseCase`
-- [ ] Inject logger, log: attempt, not found, deleted
+- [x] Inject logger, log: attempt, not found, deleted
 
 ### 10e — `AddEndpointUseCase`
-- [ ] Inject logger, log: attempt, source not found / invalid URL, added
+- [x] Inject logger, log: attempt, source not found / invalid URL, added
 
 ### 10f — `ListEndpointsUseCase`
-- [ ] Inject logger, log: attempt, returned count
+- [x] Inject logger, log: attempt, returned count
 
 ### 10g — `DeleteEndpointUseCase`
-- [ ] Inject logger, log: attempt, not found, deleted
+- [x] Inject logger, log: attempt, not found, deleted
 
 ### 10h — `ListEventsUseCase`
-- [ ] Inject logger, log: attempt, returned count
+- [x] Inject logger, log: attempt, returned count
 
 ### 10i — `GetEventDetailUseCase`
-- [ ] Inject logger, log: attempt, not found, returned
+- [x] Inject logger, log: attempt, not found, returned
 
 ---
 
 ## Task 11 — Verify existing tests still pass
 
-- [ ] Run `php bin/phpunit` inside the app container — all tests green
-- [ ] Spot-check that no test breaks due to changed `execute()` signatures (mock expectations, constructor changes)
+- [x] Run `php bin/phpunit` inside the app container — all 41 tests green
+- [x] Spot-check that no test breaks due to changed `execute()` signatures (mock expectations, constructor changes)
 
 ---
 

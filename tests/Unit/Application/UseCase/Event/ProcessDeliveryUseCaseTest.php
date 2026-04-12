@@ -21,6 +21,7 @@ use App\Domain\EventStatus;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class ProcessDeliveryUseCaseTest extends TestCase
 {
@@ -56,6 +57,7 @@ final class ProcessDeliveryUseCaseTest extends TestCase
             $this->httpDelivery,
             $this->queue,
             $this->transaction,
+            new NullLogger(),
         );
     }
 

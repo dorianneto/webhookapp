@@ -10,6 +10,7 @@ use App\Domain\Source;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class CreateSourceUseCaseTest extends TestCase
 {
@@ -19,7 +20,7 @@ final class CreateSourceUseCaseTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase    = new CreateSourceUseCase($this->repository);
+        $this->useCase    = new CreateSourceUseCase($this->repository, new NullLogger());
     }
 
     public function testExecuteSavesSourceWithCorrectData(): void
@@ -49,7 +50,7 @@ final class CreateSourceUseCaseTest extends TestCase
             $inboundUuids[] = $source->getInboundUuid();
         });
 
-        $useCase = new CreateSourceUseCase($stub);
+        $useCase = new CreateSourceUseCase($stub, new NullLogger());
         $useCase->execute('request-id', 'id-1', 'user-id', 'Source 1');
         $useCase->execute('request-id', 'id-2', 'user-id', 'Source 2');
 

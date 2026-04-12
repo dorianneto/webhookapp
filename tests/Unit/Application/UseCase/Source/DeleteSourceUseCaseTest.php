@@ -8,6 +8,7 @@ use App\Application\Port\SourceRepositoryPort;
 use App\Application\UseCase\Source\DeleteSourceUseCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class DeleteSourceUseCaseTest extends TestCase
 {
@@ -17,7 +18,7 @@ final class DeleteSourceUseCaseTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase    = new DeleteSourceUseCase($this->repository);
+        $this->useCase    = new DeleteSourceUseCase($this->repository, new NullLogger());
     }
 
     public function testExecuteCallsDeleteWithCorrectArguments(): void

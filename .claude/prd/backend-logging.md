@@ -25,14 +25,14 @@ Add structured, request-scoped logging throughout controllers and use cases so t
 - No log aggregation, alerting, or dashboard (out of scope for this iteration).
 - No distributed tracing (e.g. OpenTelemetry spans).
 - No frontend logging.
-- No changes to the existing Monolog channel or handler configuration beyond adding a stream handler for the `app` channel.
+- No changes to the existing Monolog channel or handler configuration beyond adding a stream handler for the `hookyard` channel.
 - No logging in Doctrine entities, repositories, or infrastructure adapters (except the HTTP delivery adapter, which is in scope).
 
 ---
 
 ## Requirements
 
-### R1 — Monolog stream handler for the `app` channel
+### R1 — Monolog stream handler for the `hookyard` channel
 
 Add a dedicated `app` Monolog channel backed by a `stream` handler. All application logs must go through this channel, keeping them separate from the Symfony framework channel.
 
@@ -135,7 +135,7 @@ $this->logger->info("Ingest complete for event {$event->getId()}");
 
 Update `config/packages/monolog.yaml`:
 - Declare `app` as a new channel.
-- Add a `stream` handler for `when@dev` (file, DEBUG) and update `when@prod` to route the `app` channel to the existing stderr/JSON handler.
+- Add a `stream` handler for `when@dev` (file, DEBUG) and update `when@prod` to route the `hookyard` channel to the existing stderr/JSON handler.
 
 ### Step 2 — Correlation ID subscriber
 
@@ -154,7 +154,7 @@ Use case `execute()` signatures gain a `string $requestId` parameter.
 
 ### Step 4 — Inject logger into controllers
 
-Inject `LoggerInterface $logger` (with `#[Autowire(service: 'monolog.logger.app')]`) into each controller. Add log calls per R3.
+Inject `LoggerInterface $logger` (with `#[Autowire(service: 'monolog.logger.hookyard')]`) into each controller. Add log calls per R3.
 
 ### Step 5 — Inject logger into use cases
 
@@ -175,4 +175,4 @@ Add log calls per R5.
 5. All context values are in the structured context array (second argument), not embedded in the message string.
 6. No log entry leaks sensitive data (passwords, API keys, full request bodies beyond `body_bytes`).
 7. Existing unit tests continue to pass. New tests are not required for logging calls themselves.
-8. The `app` channel is isolated: Symfony framework noise does not appear in app-level log output.
+8. The `hookyard` channel is isolated: Symfony framework noise does not appear in app-level log output.

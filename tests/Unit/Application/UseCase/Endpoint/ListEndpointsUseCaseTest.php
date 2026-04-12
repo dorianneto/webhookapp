@@ -13,6 +13,7 @@ use App\Domain\Source;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class ListEndpointsUseCaseTest extends TestCase
 {
@@ -24,7 +25,7 @@ final class ListEndpointsUseCaseTest extends TestCase
     {
         $this->repository       = $this->createMock(EndpointRepositoryPort::class);
         $this->sourceRepository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase          = new ListEndpointsUseCase($this->repository, $this->sourceRepository);
+        $this->useCase          = new ListEndpointsUseCase($this->repository, $this->sourceRepository, new NullLogger());
     }
 
     public function testExecuteReturnsList(): void

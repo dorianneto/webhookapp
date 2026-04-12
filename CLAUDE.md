@@ -113,3 +113,62 @@ Dark mode is handled automatically via shadcn's CSS variable blocks — both lig
 - Unit tests only (PHPUnit). Integration tests are out of scope.
 - Tests must cover domain logic and use cases in isolation.
 - Use mocks/stubs for any port that crosses an infrastructure boundary (HTTP client, DB, queue).
+- When a use case or handler gains a `LoggerInterface` constructor argument, pass `new NullLogger()` in tests — no mock expectations needed for logging calls.
+
+## Logging
+
+### Channel
+All application logs go through the `hookyard` Monolog channel, keeping them isolated from Symfony framework noise. The channel is declared in `config/packages/monolog.yaml` and creates a `monolog.logger.hookyard` service.
+
+**Do not use `app` as a channel name** — it is Symfony's implicit default and does not create a separate logger service.
+
+### Injecting the logger
+Use `#[WithMonologChannel('hookyard')]` at the class level (controllers, use cases, message handlers) alongside a plain `LoggerInterface $logger` constructor parameter. Autowiring resolves the correct channel automatically.
+
+```php
+use Monolog\Attribute\WithMonologChannel;
+use Psr\Log\LoggerInterface;
+
+#[WithMonologChannel('hookyard')]
+final class MyUseCase
+{
+    public function __construct(
+        // ... other dependencies ...
+        private readonly LoggerInterface $logger,
+    ) {}
+}
+```
+
+### Correlation ID
+Every HTTP request carries an `X-Request-Id` header managed by `RequestIdSubscriber` (`src/EventSubscriber/`):
+- On `kernel.request` (priority 100): reads the header or generates a UUIDv4, stores it on `$request->attributes->set('request_id', $id)`.
+- On `kernel.response`: echoes it back as `X-Request-Id`.
+
+Pass `request_id` explicitly through the call chain — controllers read `$request->attributes->get('request_id')` and forward it as the first parameter of every use case `execute()` method. For async messages, `DeliverEventMessage` carries a `requestId` field set at enqueue time so the worker logs with the same ID as the originating request.
+
+### Log levels and required fields
+| Situation | Level | Always include |
+|---|---|---|
+| Normal operation entry / success | `INFO` | `request_id` + relevant entity IDs |
+| Domain exception (4xx — not found, ownership violation) | `INFO` | `request_id`, `exception_class` |
+| Validation failure | `WARNING` | `request_id`, `violations` |
+| Non-2xx HTTP delivery response | `WARNING` | `request_id`, `event_id`, `endpoint_id`, `status_code`, `duration_ms` |
+| Transport exception (no response) | `WARNING` | `request_id`, `event_id`, `endpoint_id`, `exception_message` |
+| Max delivery attempts exhausted | `ERROR` | `request_id`, `event_id`, `endpoint_id`, `attempt_number` |
+| Unhandled exception in message handler | `ERROR` | `request_id`, `exception_class`, `message`, `trace` |
+| Internal pipeline steps | `DEBUG` | `request_id` + relevant IDs |
+
+### Structured context — never interpolate
+Always pass variable data in the context array (second argument). Never embed values in the message string.
+
+```php
+// Correct
+$this->logger->info('Ingest complete', ['request_id' => $requestId, 'event_id' => $eventId]);
+
+// Wrong
+$this->logger->info("Ingest complete for event {$eventId}");
+```
+
+### What not to log
+- Do not log full request bodies — use `body_bytes` (byte count) instead.
+- Do not log passwords, tokens, or API keys.

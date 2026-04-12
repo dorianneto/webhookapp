@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Application\UseCase\Event\IngestEventUseCase;
 use App\Domain\Exception\SourceNotFoundException;
+use Monolog\Attribute\WithMonologChannel;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,22 +15,37 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
 #[Route('/in/{uuid}', name: 'ingest_event', methods: ['POST'])]
+#[WithMonologChannel('hookyard')]
 final class IngestEventController
 {
     public function __construct(
         private readonly IngestEventUseCase $ingestEventUseCase,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function __invoke(Request $request, string $uuid): JsonResponse
     {
-        $eventId = Uuid::v7()->toRfc4122();
-        $body    = $request->getContent();
-        $headers = $request->headers->all();
-        $method  = $request->getMethod();
+        $eventId   = Uuid::v7()->toRfc4122();
+        $body      = $request->getContent();
+        $headers   = $request->headers->all();
+        $method    = $request->getMethod();
+        $requestId = $request->attributes->get('request_id');
+
+        $this->logger->info('Ingest request received', [
+            'request_id'  => $requestId,
+            'source_uuid' => $uuid,
+            'method'      => $method,
+            'body_bytes'  => strlen($body),
+        ]);
 
         try {
-            $this->ingestEventUseCase->execute($request->attributes->get('request_id'), $eventId, $uuid, $method, $headers, $body);
+            $this->ingestEventUseCase->execute($requestId, $eventId, $uuid, $method, $headers, $body);
         } catch (SourceNotFoundException) {
+            $this->logger->info('Ingest source not found', [
+                'request_id'  => $requestId,
+                'source_uuid' => $uuid,
+            ]);
+
             return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
         }
 

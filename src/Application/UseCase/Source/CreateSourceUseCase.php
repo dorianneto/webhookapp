@@ -6,16 +6,25 @@ namespace App\Application\UseCase\Source;
 
 use App\Application\Port\SourceRepositoryPort;
 use App\Domain\Source;
+use Monolog\Attribute\WithMonologChannel;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Uuid;
 
+#[WithMonologChannel('hookyard')]
 final class CreateSourceUseCase
 {
     public function __construct(
         private readonly SourceRepositoryPort $sourceRepository,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function execute(string $requestId, string $id, string $userId, string $name): Source
     {
+        $this->logger->info('Create source attempt', [
+            'request_id' => $requestId,
+            'source_id'  => $id,
+        ]);
+
         $inboundUuid = Uuid::v7()->toRfc4122();
 
         $source = new Source(
@@ -27,6 +36,11 @@ final class CreateSourceUseCase
         );
 
         $this->sourceRepository->save($source);
+
+        $this->logger->info('Create source created', [
+            'request_id' => $requestId,
+            'source_id'  => $id,
+        ]);
 
         return $source;
     }

@@ -14,6 +14,7 @@ use App\Domain\Source;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class ListEventsUseCaseTest extends TestCase
 {
@@ -25,7 +26,7 @@ final class ListEventsUseCaseTest extends TestCase
     {
         $this->eventRepository  = $this->createMock(EventRepositoryPort::class);
         $this->sourceRepository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase          = new ListEventsUseCase($this->eventRepository, $this->sourceRepository);
+        $this->useCase          = new ListEventsUseCase($this->eventRepository, $this->sourceRepository, new NullLogger());
     }
 
     public function testExecuteReturnsList(): void

@@ -6,6 +6,8 @@ namespace App\Controller\Api\v1\Source;
 
 use App\Application\UseCase\Source\CreateSourceUseCase;
 use App\Entity\User;
+use Monolog\Attribute\WithMonologChannel;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,16 +18,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/sources', name: 'create_source', methods: ['POST'])]
+#[WithMonologChannel('hookyard')]
 final class CreateSourceController
 {
     public function __construct(
         private readonly CreateSourceUseCase $createSourceUseCase,
         private readonly Security $security,
         private readonly ValidatorInterface $validator,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
+        $requestId = $request->attributes->get('request_id');
+        $route     = 'create_source';
+
+        $this->logger->info('Request received', [
+            'request_id' => $requestId,
+            'route'      => $route,
+            'method'     => $request->getMethod(),
+        ]);
+
         $user = $this->security->getUser();
 
         if (!$user instanceof User) {
@@ -45,6 +58,12 @@ final class CreateSourceController
         ]);
 
         if (\count($violations) > 0) {
+            $this->logger->warning('Validation failure', [
+                'request_id' => $requestId,
+                'route'      => $route,
+                'violations' => [(string) $violations[0]->getMessage()],
+            ]);
+
             return new JsonResponse(
                 ['error' => $violations[0]->getMessage()],
                 Response::HTTP_UNPROCESSABLE_ENTITY
@@ -52,9 +71,15 @@ final class CreateSourceController
         }
 
         $id     = Uuid::v7()->toRfc4122();
-        $source = $this->createSourceUseCase->execute($request->attributes->get('request_id'), $id, $user->getId(), $name);
+        $source = $this->createSourceUseCase->execute($requestId, $id, $user->getId(), $name);
 
         $inboundUrl = $request->getSchemeAndHttpHost() . '/in/' . $source->getInboundUuid();
+
+        $this->logger->info('Response dispatched', [
+            'request_id'  => $requestId,
+            'route'       => $route,
+            'http_status' => Response::HTTP_CREATED,
+        ]);
 
         return new JsonResponse([
             'id'          => $source->getId(),

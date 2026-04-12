@@ -9,6 +9,7 @@ use App\Application\UseCase\Source\ListSourcesUseCase;
 use App\Domain\Source;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class ListSourcesUseCaseTest extends TestCase
 {
@@ -18,7 +19,7 @@ final class ListSourcesUseCaseTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase    = new ListSourcesUseCase($this->repository);
+        $this->useCase    = new ListSourcesUseCase($this->repository, new NullLogger());
     }
 
     public function testExecuteReturnsSources(): void

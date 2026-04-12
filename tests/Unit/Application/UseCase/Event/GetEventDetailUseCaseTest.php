@@ -17,6 +17,7 @@ use App\Domain\Source;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class GetEventDetailUseCaseTest extends TestCase
 {
@@ -41,6 +42,7 @@ final class GetEventDetailUseCaseTest extends TestCase
             $this->endpointRepository,
             $this->attemptRepository,
             $this->sourceRepository,
+            new NullLogger(),
         );
     }
 

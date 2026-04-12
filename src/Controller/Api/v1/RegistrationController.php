@@ -7,6 +7,8 @@ namespace App\Controller\Api\v1;
 use App\Application\UseCase\RegisterUserUseCase;
 use App\Domain\Exception\EmailAlreadyTakenException;
 use App\Entity\User as UserEntity;
+use Monolog\Attribute\WithMonologChannel;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,16 +19,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/register', name: 'register', methods: ['POST'])]
+#[WithMonologChannel('hookyard')]
 final class RegistrationController
 {
     public function __construct(
         private readonly RegisterUserUseCase $registerUserUseCase,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly ValidatorInterface $validator,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
+        $requestId = $request->attributes->get('request_id');
+        $route     = 'register';
+
+        $this->logger->info('Request received', [
+            'request_id' => $requestId,
+            'route'      => $route,
+            'method'     => $request->getMethod(),
+        ]);
+
         $data = json_decode($request->getContent(), true);
 
         if (!\is_array($data)) {
@@ -42,6 +55,12 @@ final class RegistrationController
         ]);
 
         if (\count($violations) > 0) {
+            $this->logger->warning('Validation failure', [
+                'request_id' => $requestId,
+                'route'      => $route,
+                'violations' => [(string) $violations[0]->getMessage()],
+            ]);
+
             return new JsonResponse(
                 ['error' => $violations[0]->getMessage()],
                 Response::HTTP_UNPROCESSABLE_ENTITY
@@ -53,6 +72,12 @@ final class RegistrationController
         ]);
 
         if (\count($violations) > 0) {
+            $this->logger->warning('Validation failure', [
+                'request_id' => $requestId,
+                'route'      => $route,
+                'violations' => [(string) $violations[0]->getMessage()],
+            ]);
+
             return new JsonResponse(
                 ['error' => $violations[0]->getMessage()],
                 Response::HTTP_UNPROCESSABLE_ENTITY
@@ -64,13 +89,25 @@ final class RegistrationController
         $passwordHash = $this->passwordHasher->hashPassword($tempUser, $password);
 
         try {
-            $this->registerUserUseCase->execute($request->attributes->get('request_id'), $id, $email, $passwordHash);
-        } catch (EmailAlreadyTakenException) {
+            $this->registerUserUseCase->execute($requestId, $id, $email, $passwordHash);
+        } catch (EmailAlreadyTakenException $e) {
+            $this->logger->info('Registration email already taken', [
+                'request_id'      => $requestId,
+                'route'           => $route,
+                'exception_class' => $e::class,
+            ]);
+
             return new JsonResponse(
                 ['error' => 'Email is already registered.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+
+        $this->logger->info('Response dispatched', [
+            'request_id'  => $requestId,
+            'route'       => $route,
+            'http_status' => Response::HTTP_CREATED,
+        ]);
 
         return new JsonResponse(null, Response::HTTP_CREATED);
     }

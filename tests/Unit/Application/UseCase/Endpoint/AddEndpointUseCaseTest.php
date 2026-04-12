@@ -13,6 +13,7 @@ use App\Domain\Source;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class AddEndpointUseCaseTest extends TestCase
 {
@@ -24,7 +25,7 @@ final class AddEndpointUseCaseTest extends TestCase
     {
         $this->repository       = $this->createMock(EndpointRepositoryPort::class);
         $this->sourceRepository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase          = new AddEndpointUseCase($this->repository, $this->sourceRepository);
+        $this->useCase          = new AddEndpointUseCase($this->repository, $this->sourceRepository, new NullLogger());
     }
 
     public function testExecuteSavesEndpointWithCorrectData(): void
