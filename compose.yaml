@@ -1,18 +1,17 @@
-name: webhookapp
+name: hookyard
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
+      target: hookyard_php
     volumes:
       - .:/app
-    ports:
-      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
     env_file: .env.local
-    container_name: webhookapp-app
+    container_name: hookyard-app
     restart: always
     healthcheck:
       test: ["CMD", "symfony", "server:status"]
@@ -21,7 +20,24 @@ services:
       retries: 10
       start_period: 30s
     networks:
-        - webhookappdev
+        - hookyarddev
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: hookyard_nginx
+    volumes:
+      - .:/usr/share/nginx/html:ro
+    ports:
+      - "8000:80"
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: always
+    container_name: hookyard-nginx
+    networks:
+        - hookyarddev
 
   db:
     image: postgres:17
@@ -39,14 +55,15 @@ services:
     ports:
       - "5432:5432"
     restart: always
-    container_name: webhookapp-db
+    container_name: hookyard-db
     networks:
-        - webhookappdev
+        - hookyarddev
 
   worker:
     build:
       context: .
       dockerfile: Dockerfile
+      target: hookyard_php
     volumes:
       - .:/app
     command: php bin/console messenger:consume async --time-limit=3600
@@ -57,13 +74,13 @@ services:
         condition: service_healthy
     env_file: .env.local
     restart: always
-    container_name: webhookapp-worker
+    container_name: hookyard-worker
     networks:
-        - webhookappdev
+        - hookyarddev
 
 volumes:
   database_data:
 
 networks:
-  webhookappdev:
-    name: webhookappdev
+  hookyarddev:
+    name: hookyarddev

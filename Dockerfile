@@ -1,10 +1,10 @@
-FROM node:24 AS node
+FROM node:24 AS hookyeard_node
 
-FROM php:8.4-cli
+FROM php:8.4-fpm AS hookyard_php
 
 # Copy Node.js and NPM from the node image
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=hookyeard_node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=hookyeard_node /usr/local/bin/node /usr/local/bin/node
 
 # Symlink npm to make it accessible
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
@@ -29,6 +29,10 @@ COPY . .
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 8000
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["symfony", "server:start", "--no-tls", "--allow-http", "--listen-ip=0.0.0.0"]
+CMD [ "php-fpm" ]
+
+# NGINX
+FROM nginx:1.28-alpine AS hookyard_nginx
+
+COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/
