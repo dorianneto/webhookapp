@@ -43,7 +43,7 @@ final class AddEndpointUseCaseTest extends TestCase
                     && $endpoint->getUrl() === 'https://example.com/hook';
             }));
 
-        $this->useCase->execute('test-id', 'source-id', 'https://example.com/hook', 'user-id');
+        $this->useCase->execute('request-id', 'test-id', 'source-id', 'https://example.com/hook', 'user-id');
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -53,7 +53,7 @@ final class AddEndpointUseCaseTest extends TestCase
             ->method('findById')
             ->willReturn($this->createStub(Source::class));
 
-        $result = $this->useCase->execute('test-id', 'source-id', 'https://example.com/hook', 'user-id');
+        $result = $this->useCase->execute('request-id', 'test-id', 'source-id', 'https://example.com/hook', 'user-id');
 
         $this->assertInstanceOf(Endpoint::class, $result);
         $this->assertSame('test-id', $result->getId());
@@ -70,7 +70,7 @@ final class AddEndpointUseCaseTest extends TestCase
 
         $this->expectException(SourceNotFoundException::class);
 
-        $this->useCase->execute('test-id', 'source-id', 'https://example.com/hook', 'other-user-id');
+        $this->useCase->execute('request-id', 'test-id', 'source-id', 'https://example.com/hook', 'other-user-id');
     }
 
     public function testExecuteThrowsOnInvalidUrl(): void
@@ -84,6 +84,6 @@ final class AddEndpointUseCaseTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid URL format.');
 
-        $this->useCase->execute('test-id', 'source-id', 'not-a-valid-url', 'user-id');
+        $this->useCase->execute('request-id', 'test-id', 'source-id', 'not-a-valid-url', 'user-id');
     }
 }

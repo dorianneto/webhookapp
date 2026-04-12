@@ -64,7 +64,7 @@ final class RegistrationController
         $passwordHash = $this->passwordHasher->hashPassword($tempUser, $password);
 
         try {
-            $this->registerUserUseCase->execute($id, $email, $passwordHash);
+            $this->registerUserUseCase->execute($request->attributes->get('request_id'), $id, $email, $passwordHash);
         } catch (EmailAlreadyTakenException) {
             return new JsonResponse(
                 ['error' => 'Email is already registered.'],

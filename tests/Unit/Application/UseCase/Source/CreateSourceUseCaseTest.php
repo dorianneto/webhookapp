@@ -34,7 +34,7 @@ final class CreateSourceUseCaseTest extends TestCase
                     && $source->getInboundUuid() !== '';
             }));
 
-        $result = $this->useCase->execute('test-id', 'user-id', 'My Source');
+        $result = $this->useCase->execute('request-id', 'test-id', 'user-id', 'My Source');
 
         $this->assertInstanceOf(Source::class, $result);
         $this->assertSame('test-id', $result->getId());
@@ -50,8 +50,8 @@ final class CreateSourceUseCaseTest extends TestCase
         });
 
         $useCase = new CreateSourceUseCase($stub);
-        $useCase->execute('id-1', 'user-id', 'Source 1');
-        $useCase->execute('id-2', 'user-id', 'Source 2');
+        $useCase->execute('request-id', 'id-1', 'user-id', 'Source 1');
+        $useCase->execute('request-id', 'id-2', 'user-id', 'Source 2');
 
         $this->assertCount(2, array_unique($inboundUuids));
     }

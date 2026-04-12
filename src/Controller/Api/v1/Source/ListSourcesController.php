@@ -28,7 +28,7 @@ final class ListSourcesController
             return new JsonResponse(['error' => 'Unauthorized.'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $sources = $this->listSourcesUseCase->execute($user->getId());
+        $sources = $this->listSourcesUseCase->execute($request->attributes->get('request_id'), $user->getId());
         $baseUrl = $request->getSchemeAndHttpHost();
 
         return new JsonResponse(array_map(

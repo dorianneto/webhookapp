@@ -51,7 +51,7 @@ final class GetEventDetailUseCaseTest extends TestCase
             ->method('findById')
             ->willReturn(null);
 
-        $result = $this->useCase->execute('missing-id', 'user-id');
+        $result = $this->useCase->execute('request-id', 'missing-id', 'user-id');
 
         $this->assertNull($result);
     }
@@ -70,7 +70,7 @@ final class GetEventDetailUseCaseTest extends TestCase
             ->with('source-id', 'other-user-id')
             ->willReturn(null);
 
-        $result = $this->useCase->execute('event-id', 'other-user-id');
+        $result = $this->useCase->execute('request-id', 'event-id', 'other-user-id');
 
         $this->assertNull($result);
     }
@@ -93,7 +93,7 @@ final class GetEventDetailUseCaseTest extends TestCase
             ->method('findAllByEvent')
             ->willReturn([]);
 
-        $result = $this->useCase->execute('event-id', 'user-id');
+        $result = $this->useCase->execute('request-id', 'event-id', 'user-id');
 
         $this->assertInstanceOf(EventDetail::class, $result);
         $this->assertSame($event, $result->event);

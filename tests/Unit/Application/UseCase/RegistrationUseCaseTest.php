@@ -38,7 +38,7 @@ final class RegistrationUseCaseTest extends TestCase
 
         $this->expectException(EmailAlreadyTakenException::class);
 
-        $this->useCase->execute('new-id', 'taken@example.com', 'anyhash');
+        $this->useCase->execute('request-id', 'new-id', 'taken@example.com', 'anyhash');
     }
 
     public function testExecuteSavesUserWhenEmailIsAvailable(): void
@@ -58,6 +58,6 @@ final class RegistrationUseCaseTest extends TestCase
                     && $user->getPasswordHash() === 'hashvalue';
             }));
 
-        $this->useCase->execute('test-id', 'new@example.com', 'hashvalue');
+        $this->useCase->execute('request-id', 'test-id', 'new@example.com', 'hashvalue');
     }
 }

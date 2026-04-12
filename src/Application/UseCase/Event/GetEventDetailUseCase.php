@@ -22,7 +22,7 @@ final class GetEventDetailUseCase
         private readonly SourceRepositoryPort $sourceRepository,
     ) {}
 
-    public function execute(string $eventId, string $userId): ?EventDetail
+    public function execute(string $requestId, string $eventId, string $userId): ?EventDetail
     {
         $event = $this->eventRepository->findById($eventId);
 

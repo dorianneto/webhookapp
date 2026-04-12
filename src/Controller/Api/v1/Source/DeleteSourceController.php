@@ -9,6 +9,7 @@ use App\Domain\Exception\SourceNotFoundException;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -20,7 +21,7 @@ final class DeleteSourceController
         private readonly Security $security,
     ) {}
 
-    public function __invoke(string $id): JsonResponse
+    public function __invoke(Request $request, string $id): JsonResponse
     {
         $user = $this->security->getUser();
 
@@ -29,7 +30,7 @@ final class DeleteSourceController
         }
 
         try {
-            $this->deleteSourceUseCase->execute($id, $user->getId());
+            $this->deleteSourceUseCase->execute($request->attributes->get('request_id'), $id, $user->getId());
         } catch (SourceNotFoundException) {
             return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
         }

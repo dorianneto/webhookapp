@@ -45,7 +45,7 @@ final class ListEndpointsUseCaseTest extends TestCase
             ->with('source-id')
             ->willReturn($endpoints);
 
-        $result = $this->useCase->execute('source-id', 'user-id');
+        $result = $this->useCase->execute('request-id', 'source-id', 'user-id');
 
         $this->assertSame($endpoints, $result);
         $this->assertCount(2, $result);
@@ -62,7 +62,7 @@ final class ListEndpointsUseCaseTest extends TestCase
             ->method('findAllBySource')
             ->willReturn([]);
 
-        $result = $this->useCase->execute('source-id', 'user-id');
+        $result = $this->useCase->execute('request-id', 'source-id', 'user-id');
 
         $this->assertSame([], $result);
     }
@@ -77,6 +77,6 @@ final class ListEndpointsUseCaseTest extends TestCase
 
         $this->expectException(SourceNotFoundException::class);
 
-        $this->useCase->execute('source-id', 'other-user-id');
+        $this->useCase->execute('request-id', 'source-id', 'other-user-id');
     }
 }

@@ -14,7 +14,7 @@ final class RegisterUserUseCase
         private readonly UserRepositoryPort $userRepository,
     ) {}
 
-    public function execute(string $id, string $email, string $passwordHash): void
+    public function execute(string $requestId, string $id, string $email, string $passwordHash): void
     {
         if (null !== $this->userRepository->findByEmail($email)) {
             throw new EmailAlreadyTakenException('Email is already registered.');

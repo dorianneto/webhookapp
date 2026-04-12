@@ -34,7 +34,7 @@ final class ListSourcesUseCaseTest extends TestCase
             ->with('user-id')
             ->willReturn($sources);
 
-        $result = $this->useCase->execute('user-id');
+        $result = $this->useCase->execute('request-id', 'user-id');
 
         $this->assertSame($sources, $result);
     }
@@ -47,7 +47,7 @@ final class ListSourcesUseCaseTest extends TestCase
             ->with('user-id')
             ->willReturn([]);
 
-        $result = $this->useCase->execute('user-id');
+        $result = $this->useCase->execute('request-id', 'user-id');
 
         $this->assertSame([], $result);
     }

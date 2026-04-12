@@ -9,6 +9,7 @@ use App\Domain\Exception\SourceNotFoundException;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -20,7 +21,7 @@ final class ListEventsController
         private readonly Security $security,
     ) {}
 
-    public function __invoke(string $sourceId): JsonResponse
+    public function __invoke(Request $request, string $sourceId): JsonResponse
     {
         $user = $this->security->getUser();
 
@@ -29,7 +30,7 @@ final class ListEventsController
         }
 
         try {
-            $events = $this->listEventsUseCase->execute($sourceId, $user->getId());
+            $events = $this->listEventsUseCase->execute($request->attributes->get('request_id'), $sourceId, $user->getId());
         } catch (SourceNotFoundException) {
             return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
         }

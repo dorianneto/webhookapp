@@ -47,7 +47,7 @@ final class DeleteEndpointUseCaseTest extends TestCase
             ->method('delete')
             ->with('endpoint-id');
 
-        $this->useCase->execute('endpoint-id', 'user-id');
+        $this->useCase->execute('request-id', 'endpoint-id', 'user-id');
     }
 
     public function testExecuteThrowsWhenEndpointNotFound(): void
@@ -58,7 +58,7 @@ final class DeleteEndpointUseCaseTest extends TestCase
 
         $this->expectException(EndpointNotFoundException::class);
 
-        $this->useCase->execute('missing-id', 'user-id');
+        $this->useCase->execute('request-id', 'missing-id', 'user-id');
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -76,6 +76,6 @@ final class DeleteEndpointUseCaseTest extends TestCase
 
         $this->expectException(SourceNotFoundException::class);
 
-        $this->useCase->execute('endpoint-id', 'other-user-id');
+        $this->useCase->execute('request-id', 'endpoint-id', 'other-user-id');
     }
 }

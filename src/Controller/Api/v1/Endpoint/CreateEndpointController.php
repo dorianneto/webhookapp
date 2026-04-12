@@ -55,7 +55,7 @@ final class CreateEndpointController
 
         try {
             $id       = Uuid::v7()->toRfc4122();
-            $endpoint = $this->addEndpointUseCase->execute($id, $sourceId, $url, $user->getId());
+            $endpoint = $this->addEndpointUseCase->execute($request->attributes->get('request_id'), $id, $sourceId, $url, $user->getId());
         } catch (SourceNotFoundException) {
             return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
         } catch (\InvalidArgumentException $e) {

@@ -17,7 +17,7 @@ final class ListEventsUseCase
     ) {}
 
     /** @return Event[] */
-    public function execute(string $sourceId, string $userId): array
+    public function execute(string $requestId, string $sourceId, string $userId): array
     {
         if ($this->sourceRepository->findById($sourceId, $userId) === null) {
             throw new SourceNotFoundException('Source not found.');

@@ -14,7 +14,7 @@ final class ListSourcesUseCase
     ) {}
 
     /** @return Source[] */
-    public function execute(string $userId): array
+    public function execute(string $requestId, string $userId): array
     {
         return $this->sourceRepository->findAllByUser($userId);
     }

@@ -52,7 +52,7 @@ final class CreateSourceController
         }
 
         $id     = Uuid::v7()->toRfc4122();
-        $source = $this->createSourceUseCase->execute($id, $user->getId(), $name);
+        $source = $this->createSourceUseCase->execute($request->attributes->get('request_id'), $id, $user->getId(), $name);
 
         $inboundUrl = $request->getSchemeAndHttpHost() . '/in/' . $source->getInboundUuid();
 

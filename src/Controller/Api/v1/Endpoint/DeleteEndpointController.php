@@ -10,6 +10,7 @@ use App\Domain\Exception\SourceNotFoundException;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -21,7 +22,7 @@ final class DeleteEndpointController
         private readonly Security $security,
     ) {}
 
-    public function __invoke(string $id): JsonResponse
+    public function __invoke(Request $request, string $id): JsonResponse
     {
         $user = $this->security->getUser();
 
@@ -30,7 +31,7 @@ final class DeleteEndpointController
         }
 
         try {
-            $this->deleteEndpointUseCase->execute($id, $user->getId());
+            $this->deleteEndpointUseCase->execute($request->attributes->get('request_id'), $id, $user->getId());
         } catch (EndpointNotFoundException | SourceNotFoundException) {
             return new JsonResponse(['error' => 'Endpoint not found.'], Response::HTTP_NOT_FOUND);
         }

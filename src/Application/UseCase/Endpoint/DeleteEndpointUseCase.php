@@ -16,7 +16,7 @@ final class DeleteEndpointUseCase
         private readonly SourceRepositoryPort $sourceRepository,
     ) {}
 
-    public function execute(string $id, string $userId): void
+    public function execute(string $requestId, string $id, string $userId): void
     {
         $endpoint = $this->endpointRepository->findById($id);
 

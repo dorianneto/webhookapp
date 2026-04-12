@@ -75,8 +75,8 @@
 - `src/Application/UseCase/Event/GetEventDetailUseCase.php`
 - `src/Application/UseCase/RegisterUserUseCase.php`
 
-- [ ] Add `string $requestId` as the first parameter of each `execute()` method
-- [ ] Update every call site in the corresponding controller to pass `$request->attributes->get('request_id')`
+- [x] Add `string $requestId` as the first parameter of each `execute()` method
+- [x] Update every call site in the corresponding controller to pass `$request->attributes->get('request_id')`
 
 **Note:** This task has no logging yet — it purely threads the ID through so Task 5 and Task 6 have it available. Keep the diff minimal.
 

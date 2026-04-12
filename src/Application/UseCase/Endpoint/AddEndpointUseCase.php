@@ -16,7 +16,7 @@ final class AddEndpointUseCase
         private readonly SourceRepositoryPort $sourceRepository,
     ) {}
 
-    public function execute(string $id, string $sourceId, string $url, string $userId): Endpoint
+    public function execute(string $requestId, string $id, string $sourceId, string $url, string $userId): Endpoint
     {
         if ($this->sourceRepository->findById($sourceId, $userId) === null) {
             throw new SourceNotFoundException('Source not found.');

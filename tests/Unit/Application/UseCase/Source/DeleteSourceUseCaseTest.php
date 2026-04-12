@@ -27,6 +27,6 @@ final class DeleteSourceUseCaseTest extends TestCase
             ->method('delete')
             ->with('source-id', 'user-id');
 
-        $this->useCase->execute('source-id', 'user-id');
+        $this->useCase->execute('request-id', 'source-id', 'user-id');
     }
 }

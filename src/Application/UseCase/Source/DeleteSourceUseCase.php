@@ -12,7 +12,7 @@ final class DeleteSourceUseCase
         private readonly SourceRepositoryPort $sourceRepository,
     ) {}
 
-    public function execute(string $id, string $userId): void
+    public function execute(string $requestId, string $id, string $userId): void
     {
         $this->sourceRepository->delete($id, $userId);
     }
