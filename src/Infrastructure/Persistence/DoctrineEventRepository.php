@@ -44,12 +44,19 @@ final class DoctrineEventRepository implements EventRepositoryPort
 
     public function deleteByEndpointId(string $endpointId): void
     {
-        $this->entityManager->getConnection()->executeStatement(
-            'DELETE FROM events WHERE id IN (
-                SELECT event_id FROM event_endpoint_deliveries WHERE endpoint_id = :endpointId
-            )',
-            ['endpointId' => $endpointId],
-        );
+        $eventIds = $this->entityManager
+            ->createQuery('SELECT eed.eventId FROM App\Entity\EventEndpointDelivery eed WHERE eed.endpointId = :endpointId')
+            ->setParameter('endpointId', $endpointId)
+            ->getSingleColumnResult();
+
+        if ($eventIds === []) {
+            return;
+        }
+
+        $this->entityManager
+            ->createQuery('DELETE FROM App\Entity\Event e WHERE e.id IN (:eventIds)')
+            ->setParameter('eventIds', $eventIds)
+            ->execute();
     }
 
     public function updateStatus(string $id, EventStatus $status): void
