@@ -5,6 +5,7 @@ import { apiFetch } from '@/lib/apiFetch'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import DeleteConfirmModal from '@/components/DeleteConfirmModal'
 
 interface Source {
   id: string
@@ -20,6 +21,8 @@ export default function DashboardPage() {
   const [sources, setSources] = useState<Source[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   useEffect(() => {
     apiFetch('/api/v1/sources')
@@ -32,12 +35,14 @@ export default function DashboardPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this source?')) return
-
-    const res = await apiFetch(`/api/v1/sources/${id}`, { method: 'DELETE' })
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return
+    setDeleteLoading(true)
+    const res = await apiFetch(`/api/v1/sources/${deleteTarget.id}`, { method: 'DELETE' })
+    setDeleteLoading(false)
     if (res.ok) {
-      setSources((prev) => prev.filter((s) => s.id !== id))
+      setSources((prev) => prev.filter((s) => s.id !== deleteTarget.id))
+      setDeleteTarget(null)
       toast.success('Source deleted.')
     } else {
       toast.error('Failed to delete source.')
@@ -45,6 +50,15 @@ export default function DashboardPage() {
   }
 
   return (
+    <>
+    <DeleteConfirmModal
+      open={deleteTarget !== null}
+      onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}
+      resourceLabel="source"
+      resourceName={deleteTarget?.name ?? ''}
+      onConfirm={handleDeleteConfirm}
+      isLoading={deleteLoading}
+    />
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Sources</h1>
@@ -88,7 +102,7 @@ export default function DashboardPage() {
                   {new Date(source.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="destructive" size="sm" onClick={() => void handleDelete(source.id)}>
+                  <Button variant="destructive" size="sm" onClick={() => setDeleteTarget({ id: source.id, name: source.name })}>
                     Delete
                   </Button>
                 </TableCell>
@@ -98,5 +112,6 @@ export default function DashboardPage() {
         </Table>
       )}
     </div>
+    </>
   )
 }

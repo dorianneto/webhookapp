@@ -13,7 +13,7 @@ PRD: `.claude/prd/delete-confirmation.md`
 
 ## Frontend
 
-- [ ] Scaffold `frontend/src/components/ui/dialog.tsx` via `npx shadcn add dialog`
-- [ ] Create `frontend/src/components/DeleteConfirmModal.tsx` — Dialog with resource name input, Delete button disabled until input matches exactly, resets on close
-- [ ] Update `frontend/src/pages/DashboardPage.tsx` — replace `window.confirm` with `DeleteConfirmModal` for source deletion
-- [ ] Update `frontend/src/pages/SourceDetailPage.tsx` — replace `window.confirm` with `DeleteConfirmModal` for endpoint deletion
+- [x] Scaffold `frontend/src/components/ui/dialog.tsx` via `npx shadcn add dialog`
+- [x] Create `frontend/src/components/DeleteConfirmModal.tsx` — Dialog with resource name input, Delete button disabled until input matches exactly, resets on close
+- [x] Update `frontend/src/pages/DashboardPage.tsx` — replace `window.confirm` with `DeleteConfirmModal` for source deletion
+- [x] Update `frontend/src/pages/SourceDetailPage.tsx` — replace `window.confirm` with `DeleteConfirmModal` for endpoint deletion

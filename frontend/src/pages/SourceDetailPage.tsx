@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import DeleteConfirmModal from '@/components/DeleteConfirmModal'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { apiFetch } from '@/lib/apiFetch'
@@ -62,6 +63,8 @@ export default function SourceDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [eventsLoading, setEventsLoading] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; url: string } | null>(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   useEffect(() => {
     Promise.all([
@@ -99,12 +102,14 @@ export default function SourceDetailPage() {
       .finally(() => setEventsLoading(false))
   }, [sourceId])
 
-  const handleDeleteEndpoint = async (id: string) => {
-    if (!window.confirm('Delete this endpoint?')) return
-
-    const res = await apiFetch(`/api/v1/endpoints/${id}`, { method: 'DELETE' })
+  const handleDeleteEndpointConfirm = async () => {
+    if (!deleteTarget) return
+    setDeleteLoading(true)
+    const res = await apiFetch(`/api/v1/endpoints/${deleteTarget.id}`, { method: 'DELETE' })
+    setDeleteLoading(false)
     if (res.ok) {
-      setEndpoints((prev) => prev.filter((e) => e.id !== id))
+      setEndpoints((prev) => prev.filter((e) => e.id !== deleteTarget.id))
+      setDeleteTarget(null)
       toast.success('Endpoint deleted.')
     } else {
       toast.error('Failed to delete endpoint.')
@@ -112,6 +117,15 @@ export default function SourceDetailPage() {
   }
 
   return (
+    <>
+    <DeleteConfirmModal
+      open={deleteTarget !== null}
+      onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}
+      resourceLabel="endpoint"
+      resourceName={deleteTarget?.url ?? ''}
+      onConfirm={handleDeleteEndpointConfirm}
+      isLoading={deleteLoading}
+    />
     <div className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
@@ -171,7 +185,7 @@ export default function SourceDetailPage() {
                           <Button
                             variant="destructive"
                             size="sm"
-                            onClick={() => void handleDeleteEndpoint(endpoint.id)}
+                            onClick={() => setDeleteTarget({ id: endpoint.id, url: endpoint.url })}
                           >
                             Delete
                           </Button>
@@ -239,5 +253,6 @@ export default function SourceDetailPage() {
         </>
       )}
     </div>
+    </>
   )
 }
