@@ -1,31 +1,34 @@
-import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { Toaster } from '@/components/ui/sonner'
+import type { ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { SiteHeader } from "./SiteHeader";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { user, logout } = useAuth()
-
   return (
-    <div className="min-h-svh flex flex-col">
-      <header className="h-14 px-6 flex items-center justify-between shrink-0">
-        <Link to="/" className="font-semibold text-sm tracking-tight">
-          HookYard
-        </Link>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">{user?.email}</span>
-          <Button variant="ghost" size="sm" onClick={() => { void logout() }}>
-            Sign out
-          </Button>
-        </div>
-      </header>
-      <Separator />
-      <main className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
-        {children}
-      </main>
-      <Toaster />
-    </div>
-  )
+    <TooltipProvider>
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "calc(var(--spacing) * 72)",
+            "--header-height": "calc(var(--spacing) * 12)",
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <div className="px-4 lg:px-6">{children}</div>
+              </div>
+            </div>
+            <Toaster />
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </TooltipProvider>
+  );
 }

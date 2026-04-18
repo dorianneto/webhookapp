@@ -1,14 +1,14 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from './contexts/AuthContext'
-import ProtectedRoute from './components/ProtectedRoute'
-import Layout from './components/Layout'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import DashboardPage from './pages/DashboardPage'
-import NewSourcePage from './pages/NewSourcePage'
-import SourceDetailPage from './pages/SourceDetailPage'
-import NewEndpointPage from './pages/NewEndpointPage'
-import EventDetailPage from './pages/EventDetailPage'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
+import NewSourcePage from "./pages/NewSourcePage";
+import SourceDetailPage from "./pages/SourceDetailPage";
+import NewEndpointPage from "./pages/NewEndpointPage";
+import EventDetailPage from "./pages/EventDetailPage";
 
 function App() {
   return (
@@ -71,7 +71,7 @@ function App() {
         </Routes>
       </AuthProvider>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
