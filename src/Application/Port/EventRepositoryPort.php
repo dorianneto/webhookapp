@@ -17,4 +17,6 @@ interface EventRepositoryPort
     public function findRecentBySource(string $sourceId, int $limit): array;
 
     public function updateStatus(string $id, EventStatus $status): void;
+
+    public function deleteByEndpointId(string $endpointId): void;
 }

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Application\UseCase\Endpoint;
 
 use App\Application\Port\EndpointRepositoryPort;
+use App\Application\Port\EventRepositoryPort;
 use App\Application\Port\SourceRepositoryPort;
+use App\Application\Port\TransactionPort;
 use App\Application\UseCase\Endpoint\DeleteEndpointUseCase;
 use App\Domain\Endpoint;
 use App\Domain\Exception\EndpointNotFoundException;
@@ -20,16 +22,31 @@ final class DeleteEndpointUseCaseTest extends TestCase
 {
     private EndpointRepositoryPort&MockObject $repository;
     private SourceRepositoryPort&MockObject $sourceRepository;
+    private EventRepositoryPort&MockObject $eventRepository;
+    private TransactionPort&MockObject $transaction;
     private DeleteEndpointUseCase $useCase;
 
     protected function setUp(): void
     {
-        $this->repository       = $this->createMock(EndpointRepositoryPort::class);
+        $this->repository      = $this->createMock(EndpointRepositoryPort::class);
         $this->sourceRepository = $this->createMock(SourceRepositoryPort::class);
-        $this->useCase          = new DeleteEndpointUseCase($this->repository, $this->sourceRepository, new NullLogger());
+        $this->eventRepository  = $this->createMock(EventRepositoryPort::class);
+        $this->transaction      = $this->createMock(TransactionPort::class);
+
+        $this->transaction
+            ->method('execute')
+            ->willReturnCallback(static fn(callable $op) => $op());
+
+        $this->useCase = new DeleteEndpointUseCase(
+            $this->repository,
+            $this->sourceRepository,
+            $this->eventRepository,
+            $this->transaction,
+            new NullLogger(),
+        );
     }
 
-    public function testExecuteCallsDelete(): void
+    public function testExecuteDeletesEventsBeforeEndpoint(): void
     {
         $endpoint = new Endpoint('endpoint-id', 'source-id', 'https://example.com', new \DateTimeImmutable());
 
@@ -43,12 +60,27 @@ final class DeleteEndpointUseCaseTest extends TestCase
             ->with('source-id', 'user-id')
             ->willReturn($this->createStub(Source::class));
 
+        $callOrder = [];
+
+        $this->eventRepository
+            ->expects($this->once())
+            ->method('deleteByEndpointId')
+            ->with('endpoint-id')
+            ->willReturnCallback(function () use (&$callOrder): void {
+                $callOrder[] = 'deleteByEndpointId';
+            });
+
         $this->repository
             ->expects($this->once())
             ->method('delete')
-            ->with('endpoint-id');
+            ->with('endpoint-id')
+            ->willReturnCallback(function () use (&$callOrder): void {
+                $callOrder[] = 'delete';
+            });
 
         $this->useCase->execute('request-id', 'endpoint-id', 'user-id');
+
+        $this->assertSame(['deleteByEndpointId', 'delete'], $callOrder);
     }
 
     public function testExecuteThrowsWhenEndpointNotFound(): void

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Endpoint;
 
 use App\Application\Port\EndpointRepositoryPort;
+use App\Application\Port\EventRepositoryPort;
 use App\Application\Port\SourceRepositoryPort;
+use App\Application\Port\TransactionPort;
 use App\Domain\Exception\EndpointNotFoundException;
 use App\Domain\Exception\SourceNotFoundException;
 use Monolog\Attribute\WithMonologChannel;
@@ -17,6 +19,8 @@ final class DeleteEndpointUseCase
     public function __construct(
         private readonly EndpointRepositoryPort $endpointRepository,
         private readonly SourceRepositoryPort $sourceRepository,
+        private readonly EventRepositoryPort $eventRepository,
+        private readonly TransactionPort $transaction,
         private readonly LoggerInterface $logger,
     ) {}
 
@@ -48,7 +52,16 @@ final class DeleteEndpointUseCase
             throw new SourceNotFoundException('Source not found.');
         }
 
-        $this->endpointRepository->delete($id);
+        $this->transaction->execute(function () use ($requestId, $id): void {
+            $this->eventRepository->deleteByEndpointId($id);
+
+            $this->logger->info('Delete endpoint events deleted', [
+                'request_id'  => $requestId,
+                'endpoint_id' => $id,
+            ]);
+
+            $this->endpointRepository->delete($id);
+        });
 
         $this->logger->info('Delete endpoint deleted', [
             'request_id'  => $requestId,
