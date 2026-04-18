@@ -1,10 +1,10 @@
-FROM node:24 AS hookyeard_node
+FROM node:24 AS hookyard_node
 
 FROM php:8.4-fpm AS hookyard_php
 
 # Copy Node.js and NPM from the node image
-COPY --from=hookyeard_node /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=hookyeard_node /usr/local/bin/node /usr/local/bin/node
+COPY --from=hookyard_node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=hookyard_node /usr/local/bin/node /usr/local/bin/node
 
 # Symlink npm to make it accessible
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm

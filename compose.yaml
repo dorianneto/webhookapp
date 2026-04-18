@@ -59,6 +59,21 @@ services:
     networks:
         - hookyarddev
 
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: hookyard_node
+    working_dir: /app/frontend
+    volumes:
+      - .:/app
+    command: npm run watch
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
+    networks:
+      - hookyarddev
+
   worker:
     build:
       context: .
