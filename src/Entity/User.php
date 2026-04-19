@@ -21,6 +21,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
     #[ORM\GeneratedValue(strategy: 'NONE')]
     private string $id;
 
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $name = null;
+
     #[ORM\Column(type: Types::STRING, unique: true)]
     private string $email;
 
@@ -35,16 +38,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
         string $email,
         string $passwordHash,
         \DateTimeImmutable $createdAt,
+        ?string $name = null
     ) {
         $this->id = $id;
         $this->email = $email;
         $this->passwordHash = $passwordHash;
         $this->createdAt = $createdAt;
+        $this->name = $name ?? null;
     }
 
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
     // --- UserInterface ---
@@ -97,6 +107,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
             $user->getEmail(),
             $user->getPasswordHash(),
             $user->getCreatedAt(),
+            $user->getName() ?? null,
         );
     }
 
@@ -107,6 +118,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
             $this->email,
             $this->passwordHash,
             $this->createdAt,
+            $this->name ?? null,
         );
     }
 }

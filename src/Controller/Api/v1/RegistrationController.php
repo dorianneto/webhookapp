@@ -48,6 +48,7 @@ final class RegistrationController
 
         $email    = $data['email']    ?? '';
         $password = $data['password'] ?? '';
+        $name     = $data['name']     ?? null;
 
         $violations = $this->validator->validate($email, [
             new Assert\NotBlank(message: 'Email is required.'),
@@ -89,7 +90,7 @@ final class RegistrationController
         $passwordHash = $this->passwordHasher->hashPassword($tempUser, $password);
 
         try {
-            $this->registerUserUseCase->execute($requestId, $id, $email, $passwordHash);
+            $this->registerUserUseCase->execute($requestId, $id, $email, $passwordHash, $name);
         } catch (EmailAlreadyTakenException $e) {
             $this->logger->info('Registration email already taken', [
                 'request_id'      => $requestId,

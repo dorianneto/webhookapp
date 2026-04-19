@@ -11,6 +11,7 @@ class User
         private string $email,
         private string $passwordHash,
         private \DateTimeImmutable $createdAt,
+        private ?string $name = null
     ) {}
 
     public function getId(): string
@@ -31,5 +32,10 @@ class User
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 }

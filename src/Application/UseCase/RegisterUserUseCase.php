@@ -18,7 +18,7 @@ final class RegisterUserUseCase
         private readonly LoggerInterface $logger,
     ) {}
 
-    public function execute(string $requestId, string $id, string $email, string $passwordHash): void
+    public function execute(string $requestId, string $id, string $email, string $passwordHash, ?string $name = null): void
     {
         $this->logger->info('Register user attempt', [
             'request_id' => $requestId,
@@ -37,6 +37,7 @@ final class RegisterUserUseCase
             email: $email,
             passwordHash: $passwordHash,
             createdAt: new \DateTimeImmutable(),
+            name: $name ?? null,
         );
 
         $this->userRepository->save($user);
