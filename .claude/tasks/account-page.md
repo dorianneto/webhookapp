@@ -17,7 +17,7 @@ PRD: `.claude/prd/account-page.md`
 
 ## Frontend
 
-- [ ] Add `updateUser(updated: User): void` to `AuthContextValue` interface and `AuthProvider` in `frontend/src/contexts/AuthContext.tsx`
-- [ ] Create `frontend/src/pages/AccountPage.tsx` — name field (pre-filled), email field (read-only + muted), current/new password fields, `PUT /api/v1/account` via `apiFetch`, call `updateUser` on success, toast + inline `Alert` for feedback
-- [ ] Register `/account` protected route in `frontend/src/App.tsx`
-- [ ] Wire "Account" `DropdownMenuItem` to `<Link to="/account">` with `asChild` in `frontend/src/components/NavUser.tsx`
+- [x] Add `updateUser(updated: User): void` to `AuthContextValue` interface and `AuthProvider` in `frontend/src/contexts/AuthContext.tsx`
+- [x] Create `frontend/src/pages/AccountPage.tsx` — name field (pre-filled), email field (read-only + muted), current/new password fields, `PUT /api/v1/account` via `apiFetch`, call `updateUser` on success, toast + inline `Alert` for feedback
+- [x] Register `/account` protected route in `frontend/src/App.tsx`
+- [x] Wire "Account" `DropdownMenuItem` to `<Link to="/account">` with `asChild` in `frontend/src/components/NavUser.tsx`

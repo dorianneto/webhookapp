@@ -12,6 +12,7 @@ interface AuthContextValue {
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  updateUser: (updated: User) => void
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -72,8 +73,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('waas_user')
   }
 
+  const updateUser = (updated: User): void => {
+    setUser(updated)
+    localStorage.setItem('waas_user', JSON.stringify(updated))
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

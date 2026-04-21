@@ -9,6 +9,7 @@ import NewSourcePage from "./pages/NewSourcePage";
 import SourceDetailPage from "./pages/SourceDetailPage";
 import NewEndpointPage from "./pages/NewEndpointPage";
 import EventDetailPage from "./pages/EventDetailPage";
+import AccountPage from "./pages/AccountPage";
 
 function App() {
   return (
@@ -63,6 +64,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <SourceDetailPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <AccountPage />
                 </Layout>
               </ProtectedRoute>
             }
