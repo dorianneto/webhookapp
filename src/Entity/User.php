@@ -57,6 +57,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
         return $this->name;
     }
 
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setPasswordHash(string $passwordHash): void
+    {
+        $this->passwordHash = $passwordHash;
+    }
+
     // --- UserInterface ---
 
     public function getUserIdentifier(): string

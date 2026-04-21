@@ -17,8 +17,16 @@ final class DoctrineUserRepository implements UserRepositoryPort
 
     public function save(DomainUser $user): void
     {
-        $entity = UserEntity::fromDomain($user);
-        $this->entityManager->persist($entity);
+        $existing = $this->entityManager->getRepository(UserEntity::class)->find($user->getId());
+
+        if ($existing instanceof UserEntity) {
+            $existing->setName($user->getName());
+            $existing->setPasswordHash($user->getPasswordHash());
+        } else {
+            $entity = UserEntity::fromDomain($user);
+            $this->entityManager->persist($entity);
+        }
+
         $this->entityManager->flush();
     }
 
@@ -27,6 +35,13 @@ final class DoctrineUserRepository implements UserRepositoryPort
         $entity = $this->entityManager
             ->getRepository(UserEntity::class)
             ->findOneBy(['email' => $email]);
+
+        return $entity?->toDomain();
+    }
+
+    public function findById(string $id): ?DomainUser
+    {
+        $entity = $this->entityManager->getRepository(UserEntity::class)->find($id);
 
         return $entity?->toDomain();
     }
