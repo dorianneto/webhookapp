@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/api/v1/account', name: 'account_update', methods: ['PUT'])]
+#[Route('/account', name: 'account_update', methods: ['PUT'])]
 #[WithMonologChannel('hookyard')]
 final class AccountController
 {
