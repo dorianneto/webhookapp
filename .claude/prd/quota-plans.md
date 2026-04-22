@@ -6,7 +6,7 @@ Users are abusing the ingest endpoint (`POST /in/{uuid}`) in production. There i
 
 ## Goal
 
-Introduce a `Plan` entity that caps the total number of inbound webhook requests a user can receive (across all their sources) in a rolling 30-day window. Exceeding the quota returns HTTP 429. Counting is event-driven and asynchronous.
+Introduce a `Plan` entity that caps the total number of inbound webhook requests a user can receive (across all their sources) in a rolling 30-day window. Exceeding the quota returns HTTP 429. Counting is event-driven and synchronous.
 
 ---
 
@@ -21,7 +21,7 @@ Introduce a `Plan` entity that caps the total number of inbound webhook requests
 - **FR-5**: When an ingest request arrives, the system checks the user's remaining quota synchronously before persisting the event.
 - **FR-6**: If the user has no plan assigned, the ingest is rejected with HTTP 429.
 - **FR-7**: If the user has exhausted their quota, the ingest is rejected with HTTP 429 and response body `{"error": "Request quota exceeded."}`.
-- **FR-8**: When an ingest is accepted (quota check passes), the system enqueues an async `IncrementUsageMessage` to record the request. This is a soft limit — brief bursts over the limit are acceptable.
+- **FR-8**: When an ingest is accepted (quota check passes), the system synchronously dispatches an `IngestCompletedEvent` via a port-wrapped EventDispatcher. A listener increments the daily usage bucket within the same request. The quota limit is exact — no bursts over the limit are possible. Additional concerns (analytics, alerting, etc.) can plug in as new listeners without touching the use case.
 - **FR-9**: Plans are seeded in the database via migration. Two initial tiers: `free` (10 000 req/30 days) and `pro` (500 000 req/30 days).
 - **FR-10**: Plan assignment is managed via direct database update or a private admin endpoint — no self-service for MVP.
 
@@ -31,7 +31,7 @@ Introduce a `Plan` entity that caps the total number of inbound webhook requests
 - **NFR-2**: The request counter is stored in daily buckets (`request_usage` table) so the rolling window query always touches at most 30 rows per user.
 - **NFR-3**: The counter increment is idempotent under concurrent workers (atomic PostgreSQL upsert: `ON CONFLICT DO UPDATE`).
 - **NFR-4**: All schema changes go through Doctrine Migrations. No manual SQL.
-- **NFR-5**: Architecture constraints are preserved: Domain layer has zero Symfony/Doctrine imports; Application layer defines ports only; Infrastructure implements them.
+- **NFR-5**: Architecture constraints are preserved: Domain layer has zero Symfony/Doctrine imports; Application layer defines ports only; Infrastructure implements them. The `EventDispatcherInterface` dependency is hidden behind `IngestEventDispatcherPort` so the use case stays framework-free.
 
 ---
 
@@ -83,16 +83,10 @@ POST /in/{uuid}
   │
   ├─ Persist Event
   ├─ Enqueue DeliverEventMessage per active Endpoint
-  ├─ Enqueue IncrementUsageMessage (async)
+  ├─ dispatch IngestCompletedEvent (sync)
+  │     └─ RecordRequestUsageListener → UPSERT (user_id, today, +1)
   │
   └─ 200 OK
-```
-
-### Usage counter flow (async)
-
-```
-IncrementUsageMessage consumed by worker
-  └─ UPSERT (user_id, today, +1) into request_usage
 ```
 
 ---
@@ -103,7 +97,6 @@ IncrementUsageMessage consumed by worker
 - Usage dashboard for users
 - Overage notifications or grace periods
 - Per-source quotas
-- Hard (synchronous) counting under high concurrency
 - Cleanup job for `request_usage` rows older than 30 days (can be added later)
 
 ---
