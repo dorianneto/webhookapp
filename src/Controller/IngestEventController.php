@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Application\UseCase\Event\IngestEventUseCase;
+use App\Domain\Exception\QuotaExceededException;
 use App\Domain\Exception\SourceNotFoundException;
 use Monolog\Attribute\WithMonologChannel;
 use Psr\Log\LoggerInterface;
@@ -47,6 +48,8 @@ final class IngestEventController
             ]);
 
             return new JsonResponse(['error' => 'Source not found.'], Response::HTTP_NOT_FOUND);
+        } catch (QuotaExceededException) {
+            return new JsonResponse(['error' => 'Request quota exceeded.'], Response::HTTP_TOO_MANY_REQUESTS);
         }
 
         return new JsonResponse(null, Response::HTTP_OK);

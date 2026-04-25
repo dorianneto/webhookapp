@@ -33,18 +33,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
+    #[ORM\Column(name: 'plan_id', type: Types::STRING, nullable: true)]
+    private ?string $planId = null;
+
     public function __construct(
         string $id,
         string $email,
         string $passwordHash,
         \DateTimeImmutable $createdAt,
-        ?string $name = null
+        ?string $name = null,
+        ?string $planId = null,
     ) {
         $this->id = $id;
         $this->email = $email;
         $this->passwordHash = $passwordHash;
         $this->createdAt = $createdAt;
         $this->name = $name ?? null;
+        $this->planId = $planId;
     }
 
     public function getId(): string
@@ -65,6 +70,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
     public function setPasswordHash(string $passwordHash): void
     {
         $this->passwordHash = $passwordHash;
+    }
+
+    public function getPlanId(): ?string
+    {
+        return $this->planId;
+    }
+
+    public function setPlanId(?string $planId): void
+    {
+        $this->planId = $planId;
     }
 
     // --- UserInterface ---
@@ -118,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
             $user->getPasswordHash(),
             $user->getCreatedAt(),
             $user->getName() ?? null,
+            $user->getPlanId(),
         );
     }
 
@@ -129,6 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
             $this->passwordHash,
             $this->createdAt,
             $this->name ?? null,
+            $this->planId,
         );
     }
 }

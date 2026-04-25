@@ -11,7 +11,8 @@ class User
         private string $email,
         private string $passwordHash,
         private \DateTimeImmutable $createdAt,
-        private ?string $name = null
+        private ?string $name = null,
+        private ?string $planId = null,
     ) {}
 
     public function getId(): string
@@ -37,5 +38,10 @@ class User
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getPlanId(): ?string
+    {
+        return $this->planId;
     }
 }
