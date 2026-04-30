@@ -24,3 +24,7 @@
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# Supervisor Files
+supervisord.log
+supervisord.pid

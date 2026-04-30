@@ -85,7 +85,9 @@ services:
         APP_ENV: dev
     volumes:
       - .:/app
-    command: php bin/console messenger:consume async --time-limit=3600 --no-debug
+    command: supervisord -c /etc/supervisor/supervisord.conf
+    ports:
+      - "9001:9001"
     depends_on:
       app:
         condition: service_healthy
