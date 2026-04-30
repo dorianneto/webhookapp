@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence;
 
 use App\Application\Port\RequestUsageRepositoryPort;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 
 final class DoctrineRequestUsageRepository implements RequestUsageRepositoryPort
@@ -33,6 +34,14 @@ final class DoctrineRequestUsageRepository implements RequestUsageRepositoryPort
              VALUES (:userId, CURRENT_DATE, 1)
              ON CONFLICT (user_id, bucket_date) DO UPDATE SET count = request_usage.count + 1',
             ['userId' => $userId],
+        );
+    }
+
+    public function deleteOlderThan(DateTimeImmutable $before): int
+    {
+        return $this->connection->executeStatement(
+            'DELETE FROM request_usage WHERE bucket_date < :before',
+            ['before' => $before->format('Y-m-d')],
         );
     }
 }

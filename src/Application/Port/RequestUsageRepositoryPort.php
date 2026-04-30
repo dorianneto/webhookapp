@@ -9,4 +9,6 @@ interface RequestUsageRepositoryPort
     public function sumRolling30Days(string $userId): int;
 
     public function incrementToday(string $userId): void;
+
+    public function deleteOlderThan(\DateTimeImmutable $before): int;
 }
