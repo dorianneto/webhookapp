@@ -14,14 +14,17 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-install pdo_pgsql intl zip pcntl opcache \
   && rm -rf /var/lib/apt/lists/*
 
-COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Symfony CLI
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
   && mv /root/.symfony*/bin/symfony /usr/local/bin/symfony
+
+ARG APP_ENV=prod
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY docker/php/opcache.dev.ini /tmp/opcache.dev.ini
+RUN if [ "$APP_ENV" = "dev" ]; then cp /tmp/opcache.dev.ini /usr/local/etc/php/conf.d/opcache.ini; fi
 
 WORKDIR /app
 COPY . .
