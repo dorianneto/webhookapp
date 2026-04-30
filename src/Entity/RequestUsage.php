@@ -14,7 +14,7 @@ class RequestUsage
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::INTEGER)]
-    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
     #[ORM\Column(name: 'user_id', type: Types::STRING)]
