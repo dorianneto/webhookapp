@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { apiFetch } from '@/lib/apiFetch'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { apiFetch } from "@/lib/apiFetch";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,72 +19,86 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from "@/components/ui/breadcrumb";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface DeliveryAttempt {
-  attemptNumber: number
-  statusCode: number | null
-  responseBody: string
-  durationMs: number
-  attemptedAt: string
+  attemptNumber: number;
+  statusCode: number | null;
+  responseBody: string;
+  durationMs: number;
+  attemptedAt: string;
 }
 
 interface EndpointDelivery {
-  endpointId: string
-  endpointUrl: string
-  status: 'pending' | 'delivered' | 'failed'
-  attempts: DeliveryAttempt[]
+  endpointId: string;
+  endpointUrl: string;
+  status: "pending" | "delivered" | "failed";
+  attempts: DeliveryAttempt[];
 }
 
 interface EventDetail {
-  id: string
-  method: string
-  headers: Record<string, string[]>
-  body: string
-  status: 'pending' | 'delivered' | 'failed'
-  receivedAt: string
-  deliveries: EndpointDelivery[]
+  id: string;
+  method: string;
+  headers: Record<string, string[]>;
+  body: string;
+  status: "pending" | "delivered" | "failed";
+  receivedAt: string;
+  deliveries: EndpointDelivery[];
 }
 
-type DeliveryStatus = EndpointDelivery['status']
+type DeliveryStatus = EndpointDelivery["status"];
 
-function statusBadgeVariant(status: DeliveryStatus): 'default' | 'secondary' | 'destructive' {
-  if (status === 'delivered') return 'default'
-  if (status === 'failed') return 'destructive'
-  return 'secondary'
+function statusBadgeVariant(
+  status: DeliveryStatus,
+): "default" | "secondary" | "destructive" {
+  if (status === "delivered") return "default";
+  if (status === "failed") return "destructive";
+  return "secondary";
 }
 
 function statusBadgeClass(status: DeliveryStatus) {
-  return status === 'delivered' ? 'bg-green-600 hover:bg-green-700 text-white' : ''
+  return status === "delivered"
+    ? "bg-green-600 hover:bg-green-700 text-white"
+    : "";
 }
 
-function httpCodeBadgeVariant(code: number | null): 'default' | 'secondary' | 'destructive' {
-  if (code === null) return 'secondary'
-  if (code >= 200 && code < 300) return 'default'
-  return 'destructive'
+function httpCodeBadgeVariant(
+  code: number | null,
+): "default" | "secondary" | "destructive" {
+  if (code === null) return "secondary";
+  if (code >= 200 && code < 300) return "default";
+  return "destructive";
 }
 
 function httpCodeBadgeClass(code: number | null) {
-  return code !== null && code >= 200 && code < 300 ? 'bg-green-600 hover:bg-green-700 text-white' : ''
+  return code !== null && code >= 200 && code < 300
+    ? "bg-green-600 hover:bg-green-700 text-white"
+    : "";
 }
 
 export default function EventDetailPage() {
-  const { sourceId, eventId } = useParams<{ sourceId: string; eventId: string }>()
+  const { sourceId, eventId } = useParams<{
+    sourceId: string;
+    eventId: string;
+  }>();
 
-  const [event, setEvent] = useState<EventDetail | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [event, setEvent] = useState<EventDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     apiFetch(`/api/v1/events/${eventId}`)
       .then((res) => {
-        if (!res.ok) throw new Error('Event not found.')
-        return res.json() as Promise<EventDetail>
+        if (!res.ok) throw new Error("Event not found.");
+        return res.json() as Promise<EventDetail>;
       })
       .then(setEvent)
-      .catch((err: unknown) => setError(err instanceof Error ? err.message : 'Failed to load event.'))
-      .finally(() => setLoading(false))
-  }, [eventId])
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err.message : "Failed to load event."),
+      )
+      .finally(() => setLoading(false));
+  }, [eventId]);
 
   return (
     <div className="space-y-6">
@@ -143,7 +164,9 @@ export default function EventDetailPage() {
             </CardHeader>
             <CardContent>
               <pre className="bg-muted rounded-md p-4 text-xs overflow-x-auto">
-                {event.body || <em className="text-muted-foreground">(empty)</em>}
+                {event.body || (
+                  <em className="text-muted-foreground">(empty)</em>
+                )}
               </pre>
             </CardContent>
           </Card>
@@ -154,13 +177,17 @@ export default function EventDetailPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {event.deliveries.length === 0 && (
-                <p className="text-sm text-muted-foreground">No delivery records yet.</p>
+                <p className="text-sm text-muted-foreground">
+                  No delivery records yet.
+                </p>
               )}
 
               {event.deliveries.map((delivery) => (
-                <div key={delivery.endpointId} className="border rounded-md overflow-hidden">
+                <div key={delivery.endpointId} className="border rounded-md">
                   <div className="px-4 py-2.5 bg-muted flex items-center justify-between gap-4">
-                    <code className="text-xs truncate">{delivery.endpointUrl}</code>
+                    <code className="text-xs truncate">
+                      {delivery.endpointUrl}
+                    </code>
                     <Badge
                       variant={statusBadgeVariant(delivery.status)}
                       className={statusBadgeClass(delivery.status)}
@@ -170,41 +197,56 @@ export default function EventDetailPage() {
                   </div>
 
                   {delivery.attempts.length === 0 ? (
-                    <p className="px-4 py-3 text-sm text-muted-foreground">No attempts yet.</p>
+                    <p className="px-4 py-3 text-sm text-muted-foreground">
+                      No attempts yet.
+                    </p>
                   ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>#</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Duration</TableHead>
-                          <TableHead>Response</TableHead>
-                          <TableHead>Time</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {delivery.attempts.map((attempt) => (
-                          <TableRow key={attempt.attemptNumber}>
-                            <TableCell className="text-muted-foreground">{attempt.attemptNumber}</TableCell>
-                            <TableCell>
-                              <Badge
-                                variant={httpCodeBadgeVariant(attempt.statusCode)}
-                                className={httpCodeBadgeClass(attempt.statusCode)}
-                              >
-                                {attempt.statusCode ?? '—'}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-sm">{attempt.durationMs} ms</TableCell>
-                            <TableCell>
-                              <code className="text-xs">{attempt.responseBody || '—'}</code>
-                            </TableCell>
-                            <TableCell className="text-sm text-muted-foreground">
-                              {new Date(attempt.attemptedAt).toLocaleString()}
-                            </TableCell>
+                    <ScrollArea>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>#</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Duration</TableHead>
+                            <TableHead>Response</TableHead>
+                            <TableHead>Time</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHeader>
+                        <TableBody>
+                          {delivery.attempts.map((attempt) => (
+                            <TableRow key={attempt.attemptNumber}>
+                              <TableCell className="text-muted-foreground">
+                                {attempt.attemptNumber}
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant={httpCodeBadgeVariant(
+                                    attempt.statusCode,
+                                  )}
+                                  className={httpCodeBadgeClass(
+                                    attempt.statusCode,
+                                  )}
+                                >
+                                  {attempt.statusCode ?? "—"}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {attempt.durationMs} ms
+                              </TableCell>
+                              <TableCell>
+                                <code className="text-xs">
+                                  {attempt.responseBody || "—"}
+                                </code>
+                              </TableCell>
+                              <TableCell className="text-sm text-muted-foreground">
+                                {new Date(attempt.attemptedAt).toLocaleString()}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                      <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
                   )}
                 </div>
               ))}
@@ -213,5 +255,5 @@ export default function EventDetailPage() {
         </>
       )}
     </div>
-  )
+  );
 }
