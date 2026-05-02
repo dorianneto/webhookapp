@@ -9,6 +9,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <TooltipProvider>
       <SidebarProvider
+        className="h-dvh overflow-hidden"
         style={
           {
             "--sidebar-width": "calc(var(--spacing) * 72)",
@@ -19,10 +20,10 @@ export default function Layout({ children }: { children: ReactNode }) {
         <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />
-          <div className="flex flex-1 flex-col">
-            <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                <div className="px-4 lg:px-6">{children}</div>
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <div className="@container/main flex flex-1 flex-col gap-2 overflow-hidden">
+              <div className="flex flex-1 flex-col gap-4 py-4 md:gap-6 md:py-6 overflow-hidden">
+                <div className="flex flex-1 flex-col min-h-0 overflow-y-auto px-4 lg:px-6">{children}</div>
               </div>
             </div>
             <Toaster />

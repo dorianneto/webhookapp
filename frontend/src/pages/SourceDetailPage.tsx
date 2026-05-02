@@ -150,7 +150,7 @@ export default function SourceDetailPage() {
         onConfirm={handleDeleteEndpointConfirm}
         isLoading={deleteLoading}
       />
-      <div className="space-y-6">
+      <div className="flex flex-1 flex-col min-h-0 gap-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -177,7 +177,7 @@ export default function SourceDetailPage() {
 
         {!loading && !error && (
           <>
-            <Card>
+            <Card className="shrink-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0">
                 <CardTitle className="text-base">Endpoints</CardTitle>
                 <Button
@@ -232,8 +232,8 @@ export default function SourceDetailPage() {
               </CardContent>
             </Card>
 
-            <Card className="">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <Card className="flex flex-col flex-1 min-h-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 shrink-0">
                 <CardTitle className="text-base">Events</CardTitle>
                 <Button
                   size="sm"
@@ -244,8 +244,8 @@ export default function SourceDetailPage() {
                   {eventsLoading ? "Refreshing…" : "Refresh"}
                 </Button>
               </CardHeader>
-              <CardContent>
-                <ScrollArea className="w-full h-screen">
+              <CardContent className="flex-1 min-h-0 overflow-hidden">
+                <ScrollArea className="h-full w-full">
                   {events.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No events received yet.
