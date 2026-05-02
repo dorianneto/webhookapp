@@ -1,7 +1,6 @@
-import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react";
+import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -27,18 +26,21 @@ export function NavMain({
             <SidebarMenuButton
               tooltip="Quick Create"
               className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
+              asChild
             >
-              <IconCirclePlusFilled />
-              <span>Quick Create</span>
+              <Link to="/sources/new">
+                <IconCirclePlusFilled />
+                <span>Quick Create</span>
+              </Link>
             </SidebarMenuButton>
-            <Button
+            {/* <Button
               size="icon"
               className="size-8 group-data-[collapsible=icon]:opacity-0"
               variant="outline"
             >
               <IconMail />
               <span className="sr-only">Inbox</span>
-            </Button>
+            </Button> */}
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
