@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import SourcesPage from "./pages/SourcesPage";
 import NewSourcePage from "./pages/NewSourcePage";
 import SourceDetailPage from "./pages/SourceDetailPage";
 import NewEndpointPage from "./pages/NewEndpointPage";
@@ -24,6 +25,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <DashboardPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sources"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <SourcesPage />
                 </Layout>
               </ProtectedRoute>
             }

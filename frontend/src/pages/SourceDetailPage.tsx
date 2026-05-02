@@ -131,7 +131,7 @@ export default function SourceDetailPage() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/">Sources</Link>
+              <Link to="/sources">Sources</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />

@@ -1,117 +1,198 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-import { apiFetch } from '@/lib/apiFetch'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import DeleteConfirmModal from '@/components/DeleteConfirmModal'
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/apiFetch";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
 
-interface Source {
-  id: string
-  name: string
-  inboundUuid: string
-  inboundUrl: string
-  createdAt: string
+interface DashboardStats {
+  totalSources: number;
+  totalEndpoints: number;
+  totalEventsReceived: number;
+  deliveredEventsCount: number;
+  pendingEventsCount: number;
+  failedEventsCount: number;
+  lastEventReceivedAt: string | null;
+  quotaUsed: number;
+  quotaLimit: number;
 }
 
 export default function DashboardPage() {
-  const navigate = useNavigate()
-
-  const [sources, setSources] = useState<Source[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
-  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiFetch('/api/v1/sources')
+    apiFetch("/api/v1/dashboard")
       .then((res) => {
-        if (!res.ok) throw new Error('Failed to load sources.')
-        return res.json() as Promise<Source[]>
+        if (!res.ok) throw new Error("Failed to load dashboard.");
+        return res.json() as Promise<DashboardStats>;
       })
-      .then(setSources)
-      .catch((err: unknown) => setError(err instanceof Error ? err.message : 'Failed to load sources.'))
-      .finally(() => setLoading(false))
-  }, [])
+      .then(setStats)
+      .catch((err: unknown) =>
+        setError(
+          err instanceof Error ? err.message : "Failed to load dashboard.",
+        ),
+      )
+      .finally(() => setLoading(false));
+  }, []);
 
-  const handleDeleteConfirm = async () => {
-    if (!deleteTarget) return
-    setDeleteLoading(true)
-    const res = await apiFetch(`/api/v1/sources/${deleteTarget.id}`, { method: 'DELETE' })
-    setDeleteLoading(false)
-    if (res.ok) {
-      setSources((prev) => prev.filter((s) => s.id !== deleteTarget.id))
-      setDeleteTarget(null)
-      toast.success('Source deleted.')
-    } else {
-      toast.error('Failed to delete source.')
-    }
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
   }
 
-  return (
-    <>
-    <DeleteConfirmModal
-      open={deleteTarget !== null}
-      onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}
-      resourceLabel="source"
-      resourceName={deleteTarget?.name ?? ''}
-      onConfirm={handleDeleteConfirm}
-      isLoading={deleteLoading}
-    />
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Sources</h1>
-        <Button onClick={() => navigate('/sources/new')}>New Source</Button>
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader>
+                <Skeleton className="h-4 w-24" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-16" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
+    );
+  }
 
-      {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
+  if (!stats) return null;
 
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+  const quotaPct =
+    stats.quotaLimit > 0
+      ? Math.min(100, Math.round((stats.quotaUsed / stats.quotaLimit) * 100))
+      : 0;
 
-      {!loading && !error && sources.length === 0 && (
-        <p className="text-sm text-muted-foreground">No sources yet. Create one to get started.</p>
-      )}
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader>
+            <CardAction>
+              <Link to={"/sources"}>View sources</Link>
+            </CardAction>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Sources
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">{stats.totalSources}</p>
+          </CardContent>
+        </Card>
 
-      {sources.length > 0 && (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Inbound URL</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sources.map((source) => (
-              <TableRow key={source.id}>
-                <TableCell>
-                  <Link to={`/sources/${source.id}`} className="font-medium hover:underline">
-                    {source.name}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <code className="text-xs">{source.inboundUrl}</code>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {new Date(source.createdAt).toLocaleDateString()}
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button variant="destructive" size="sm" onClick={() => setDeleteTarget({ id: source.id, name: source.name })}>
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Endpoints
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">{stats.totalEndpoints}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Events
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">
+              {stats.totalEventsReceived}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Last Event Received
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-semibold">
+              {stats.lastEventReceivedAt
+                ? new Date(stats.lastEventReceivedAt).toLocaleString()
+                : "Never"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Delivered
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">
+              {stats.deliveredEventsCount}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Pending
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">{stats.pendingEventsCount}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Failed
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">{stats.failedEventsCount}</p>
+          </CardContent>
+        </Card>
+
+        {stats.quotaLimit > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Request Quota (30d)
+              </CardTitle>
+              <CardDescription>
+                {stats.quotaUsed.toLocaleString()} /{" "}
+                {stats.quotaLimit.toLocaleString()}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-2 rounded-full bg-muted overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all"
+                  style={{ width: `${quotaPct}%` }}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
-    </>
-  )
+  );
 }
