@@ -36,21 +36,22 @@ const data = {
     },
   ],
   navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
+    // {
+    //   title: "Settings",
+    //   url: "#",
+    //   icon: IconSettings,
+    // },
     {
       title: "Get Help",
-      url: "#",
+      url: "https://github.com/dorianneto/hookyard/issues",
       icon: IconHelp,
+      external: true,
     },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
+    // {
+    //   title: "Search",
+    //   url: "#",
+    //   icon: IconSearch,
+    // },
   ],
 }
 
