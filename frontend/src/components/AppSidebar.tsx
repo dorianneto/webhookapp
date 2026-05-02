@@ -1,16 +1,15 @@
-import * as React from "react"
+import * as React from "react";
 import {
   IconDashboard,
   IconDatabase,
   IconHelp,
   IconTrack,
   IconSearch,
-  IconSettings,
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
-import { NavMain } from "@/components/NavMain"
-import { NavSecondary } from "@/components/NavSecondary"
-import { NavUser } from "@/components/NavUser"
+import { NavMain } from "@/components/NavMain";
+import { NavSecondary } from "@/components/NavSecondary";
+import { NavUser } from "@/components/NavUser";
 import {
   Sidebar,
   SidebarContent,
@@ -19,8 +18,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { useAuth } from "@/contexts/AuthContext"
+} from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthContext";
 
 const data = {
   navMain: [
@@ -47,16 +46,16 @@ const data = {
       icon: IconHelp,
       external: true,
     },
-    // {
-    //   title: "Search",
-    //   url: "#",
-    //   icon: IconSearch,
-    // },
+    {
+      title: "Search",
+      url: "#",
+      icon: IconSearch,
+    },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, logout} = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -83,5 +82,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={user} logout={logout} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
